@@ -1,9 +1,9 @@
 <!--
   Author: Ilikara 3435193369@qq.com
-  Date: 2025-01-20 21:02:23
+  Date: 2025-01-20 13:51:16
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-20 21:31:19
-  FilePath: /SynapForest/src/routes/+page.svelte
+  LastEditTime: 2025-01-20 20:39:22
+  FilePath: /my-svelte-project/src/Toolbar.svelte
   Description: 
   
   Copyright (c) 2025 AirFortressIlikara
@@ -16,8 +16,20 @@
   MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
   See the Mulan PubL v2 for more details.
 -->
-<script lang="ts">
-    import App from "../components/App.svelte";
+<script>
 </script>
 
-<App />
+<div class="toolbar">
+    <slot />
+</div>
+
+<style>
+    .toolbar {
+        height: 50px;
+        background-color: #333;
+        color: white;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+    }
+</style>

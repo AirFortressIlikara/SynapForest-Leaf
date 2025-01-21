@@ -1,9 +1,9 @@
 <!--
   Author: Ilikara 3435193369@qq.com
-  Date: 2025-01-20 21:02:23
+  Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-20 21:31:19
-  FilePath: /SynapForest/src/routes/+page.svelte
+  LastEditTime: 2025-01-20 17:09:13
+  FilePath: /my-svelte-project/src/MainContent.svelte
   Description: 
   
   Copyright (c) 2025 AirFortressIlikara
@@ -16,8 +16,14 @@
   MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
   See the Mulan PubL v2 for more details.
 -->
-<script lang="ts">
-    import App from "../components/App.svelte";
-</script>
+<div class="main-content">
+    <slot />
+</div>
 
-<App />
+<style>
+    .main-content {
+        flex-grow: 1;
+        background-color: #fff;
+        padding: 20px;
+    }
+</style>
