@@ -17,7 +17,6 @@
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
-		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^4.0.0",
 		"@tailwindcss/container-queries": "^0.1.1",
@@ -41,6 +40,7 @@
 		"vitest": "^2.1.8"
 	},
 	"dependencies": {
-		"@inlang/paraglide-sveltekit": "^0.15.5"
+		"@inlang/paraglide-sveltekit": "^0.15.5",
+		"@sveltejs/adapter-static": "^3.0.8"
 	}
 }

@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:33:58
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-20 21:25:25
+ * @LastEditTime: 2025-01-21 16:57:44
  * @FilePath: /SynapForest/src/components/type.ts
  * @Description: 
  * 
@@ -22,8 +22,8 @@ export interface Folder {
     description: string;
     items: string[];
     parent: string;
-    subFolders: string[];
-    modifiedAt: Date;
+    sub_folders: string[];
+    modified_at: Date;
     tags: string[];
     isExpand: boolean;
 }

@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-20 21:34:57
+  LastEditTime: 2025-01-21 21:43:19
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -17,17 +17,18 @@
   See the Mulan PubL v2 for more details.
 -->
 <script>
-	import ResizableSidebar from "./ResizableSidebar.svelte";
-	import Toolbar from "./Toolbar.svelte";
-	import MainContent from "./MainContent.svelte";
-	import FolderTree from "./FolderTree.svelte";
+	import ResizableSidebar from './ResizableSidebar.svelte';
+	import Toolbar from './Toolbar.svelte';
+	import MainContent from './MainContent.svelte';
+	import FolderTree from './FolderTree.svelte';
+	import Leftbar from './Leftbar.svelte';
 </script>
 
 <div class="app">
 	<!-- 左边栏 -->
 	<ResizableSidebar width={200}>
 		<div class="sidebar-content">
-			<FolderTree />
+			<Leftbar />
 		</div>
 	</ResizableSidebar>
 
@@ -42,7 +43,7 @@
 		<div class="sidebar-content">
 			<h2>Right Sidebar</h2>
 			<p>This is the right sidebar content.</p>
-			<button on:click={() => alert("Button clicked!")}>Click Me</button>
+			<button on:click={() => alert('Button clicked!')}>Click Me</button>
 		</div>
 	</ResizableSidebar>
 </div>
@@ -62,6 +63,7 @@
 
 	.sidebar-content {
 		padding: 10px;
+		height: 100%;
 	}
 
 	.sidebar-content h2 {

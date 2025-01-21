@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-20 21:27:44
+ * @LastEditTime: 2025-01-21 17:00:55
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -21,17 +21,22 @@ import type { Folder, Item, Tag } from './type';
 
 // 创建一个 writable store 来存储 Folder 数组
 export const folders = writable<Record<string, Folder>>({
-    "0000000000000000-0000-0000-0000-000000000000": {
-        id: "0000000000000000-0000-0000-0000-000000000000",
+    "00000000-0000-0000-0000-000000000000": {
+        id: "00000000-0000-0000-0000-000000000000",
         name: "root",
         description: "",
         items: [],
         parent: "",
-        subFolders: [],
-        modifiedAt: new Date(),
+        sub_folders: [],
+        modified_at: new Date(),
         tags: [],
         isExpand: true,
     }
 });
 export const tags = writable<Record<string, Tag>>({});
 export const items = writable<Record<string, Item>>({});
+
+export const selectedFolders = writable<Set<string>>(new Set());
+
+export const serverAddress = writable<string>('http://127.0.0.1:41595'); // 默认值为空字符串
+export const token = writable<string>('TEST123123'); // 默认值为空字符串
