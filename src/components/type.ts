@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:33:58
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-21 16:57:44
+ * @LastEditTime: 2025-01-22 12:02:26
  * @FilePath: /SynapForest/src/components/type.ts
  * @Description: 
  * 
@@ -32,10 +32,10 @@ export type Tag = Folder;
 
 export interface Item {
     id: string;
-    createdAt: Date;
-    importedAt: Date;
-    modifiedAt: Date;
-    deletedAt: Date | null;
+    created_at: Date;
+    imported_at: Date;
+    modified_at: Date;
+    deleted_at: Date | null;
 
     name: string;
     ext: string;
@@ -47,11 +47,15 @@ export interface Item {
     url: string;
     annotation: string;
 
-    tagIds: string[];
-    folderIds: string[];
+    tag_ids: string[];
+    folder_ids: string[];
 
     star: number;
 
-    haveThumbnail: boolean;
-    havePreview: boolean;
+    have_thumbnail: boolean;
+    have_preview: boolean;
+
+    preview_url:string;
+    thumbnail_url:string;
+    raw_url:string;
 }

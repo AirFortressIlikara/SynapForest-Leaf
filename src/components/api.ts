@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-21 16:57:48
+ * @LastEditTime: 2025-01-23 18:43:31
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -18,14 +18,14 @@
  */
 import { get } from 'svelte/store';
 import { serverAddress, token } from './stores';
-import type { Folder } from './type';
+import type { Folder, Item } from './type';
 
 /**
  * 从后端获取文件夹数据
  * @param params 请求参数
  * @returns 文件夹列表
  */
-export const fetchFoldersFromBackend = async (params = {}) => {
+export const fetchFolders = async (params = {}) => {
     try {
         const address = get(serverAddress); // 从 store 中获取服务器地址
         const authToken = get(token); // 从 store 中获取 token
@@ -73,6 +73,75 @@ export const fetchFoldersFromBackend = async (params = {}) => {
         console.log('Fetched folders:', folders);
 
         return folders;
+    } catch (error) {
+        console.error('Error fetching folders:', error);
+        return []; // 返回空数组表示失败
+    }
+};
+
+export const fetchItems = async (params = {}) => {
+    try {
+        const address = get(serverAddress); // 从 store 中获取服务器地址
+        const authToken = get(token); // 从 store 中获取 token
+
+        if (!address || !authToken) {
+            throw new Error('Server address or token is missing');
+        }
+
+        const body = JSON.stringify({
+            ...params,
+            token: authToken,
+        });
+
+        const response = await fetch(`${address}/api/item/list`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: body,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch folders');
+        }
+
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'Unknown error occurred');
+        }
+
+        const items: Item[] = result.data.map((item: Item) => ({
+            id: item.id,
+            created_at: item.created_at,
+            imported_at: item.imported_at,
+            modified_at: item.modified_at,
+            deleted_at: item.deleted_at,
+
+            name: item.name,
+            ext: item.ext,
+
+            width: item.width,
+            height: item.height,
+            size: item.size,
+
+            url: item.url,
+            annotation: item.annotation,
+
+            tag_ids: item.tag_ids ? item.tag_ids : [],
+            folder_ids: item.folder_ids ? item.folder_ids : [],
+            star: item.star,
+
+            have_thumbnail: item.have_thumbnail,
+            have_preview: item.have_preview,
+
+            preview_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/previews/${item.id}` : '',
+            thumbnail_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/thumbnails/${item.id}` : '',
+        }))
+
+        console.log('Fetched items:', items);
+
+        return items;
     } catch (error) {
         console.error('Error fetching folders:', error);
         return []; // 返回空数组表示失败

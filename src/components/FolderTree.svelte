@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-21 21:27:21
+  LastEditTime: 2025-01-23 15:12:34
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -17,10 +17,9 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { get } from 'svelte/store';
+	import { onMount } from 'svelte';
 	import { folders, selectedFolders } from './stores';
-	import { fetchFoldersFromBackend } from './api';
+	import { fetchFolders } from './api';
 	import type { Folder } from './type';
 
 	let isLoading = false;
@@ -33,18 +32,13 @@
 	$: subFolderIDs = folder?.sub_folders ?? [];
 
 	console.log('Rendering folder id: ', folderId);
-	console.log('SubFolder id: ', subFolderIDs);
-	console.log('Folder: ', folder);
 
-	// 在组件加载时获取文件夹数据
 	onMount(async () => {
 		if (level === 0) {
 			isLoading = true;
 			try {
-				// 调用 API 获取文件夹数据（返回的是数组）
-				const fetchedFolders = await fetchFoldersFromBackend({});
+				const fetchedFolders = await fetchFolders({});
 
-				// 将数组转换为 Record<string, Folder> 格式
 				const foldersMap: Record<string, Folder> = {};
 				fetchedFolders.forEach((folder) => {
 					foldersMap[folder.id] = folder;
@@ -52,7 +46,6 @@
 
 				console.log('FoldersMap:', foldersMap);
 
-				// 更新 store
 				folders.set(foldersMap);
 			} catch (err) {
 				error = (err as Error).message;
@@ -62,20 +55,21 @@
 		}
 	});
 
-	// 处理文件夹点击事件
 	function handleFolderClick(event: MouseEvent, folderId: string) {
-		if (event.ctrlKey) {
-			// Ctrl + 点击：多选
-			$selectedFolders = new Set($selectedFolders);
-			if ($selectedFolders.has(folderId)) {
-				$selectedFolders.delete(folderId);
+		selectedFolders.update(($selectedFolders) => {
+			let newSelectedFolders = { ...$selectedFolders };
+			if (event.ctrlKey) {
+				if (newSelectedFolders[folderId]) {
+					delete newSelectedFolders[folderId];
+				} else {
+					newSelectedFolders[folderId] = true;
+				}
 			} else {
-				$selectedFolders.add(folderId);
+				newSelectedFolders = { [folderId]: true };
 			}
-		} else {
-			// 单选
-			$selectedFolders = new Set([folderId]);
-		}
+			return newSelectedFolders;
+		});
+		console.log('Selected folders:', Object.keys($selectedFolders));
 	}
 </script>
 
@@ -88,7 +82,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="folder-name {$selectedFolders.has(folder.id) ? 'selected' : ''}"
+			class="folder-name {folder.id in $selectedFolders ? 'selected' : ''}"
 			on:click={(event) => {
 				event.stopPropagation();
 				handleFolderClick(event, folder.id);
@@ -121,15 +115,14 @@
 
 <style>
 	.folder {
-		/* margin-left: 20px; */
 		cursor: pointer;
 	}
 	.folder-name {
 		font-weight: bold;
 	}
 	.selected {
-		box-shadow: 0 0 8px rgba(0, 0, 0, 0.3); /* 添加阴影效果 */
-		background-color: #f0f0f0; /* 可选：添加背景色以增强效果 */
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+		background-color: #f0f0f0;
 	}
 	.sub-folders {
 		margin-left: 20px;

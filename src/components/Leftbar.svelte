@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-21 21:44:59
+  LastEditTime: 2025-01-23 15:14:55
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -20,22 +20,32 @@
 	import { onDestroy } from 'svelte';
 	import FolderTree from './FolderTree.svelte';
 	import { folders, selectedFolders } from './stores';
+	import { browser } from '$app/environment';
+	import { get } from 'svelte/store';
 
-	// 处理全选
-	function handleSelectAll(event: KeyboardEvent) {
-		if (event.ctrlKey && event.key === 'a') {
-			event.preventDefault();
-			$selectedFolders = new Set(Object.keys($folders));
+	if (browser) {
+		function handleSelectAll(event: KeyboardEvent) {
+			if (event.ctrlKey && event.key === 'a') {
+				event.preventDefault();
+				selectedFolders.update(() =>
+					Object.keys($folders).reduce(
+						(acc, folderID) => {
+							acc[folderID] = true;
+							return acc;
+						},
+						{} as Record<string, boolean>
+					)
+				);
+				console.log('Selected folders:', Object.keys($selectedFolders));
+			}
 		}
+
+		document.addEventListener('keydown', handleSelectAll);
+
+		onDestroy(() => {
+			document.removeEventListener('keydown', handleSelectAll);
+		});
 	}
-
-	// 监听键盘事件
-	document.addEventListener('keydown', handleSelectAll);
-
-	// 组件销毁时移除事件监听器
-	onDestroy(() => {
-		document.removeEventListener('keydown', handleSelectAll);
-	});
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -44,7 +54,8 @@
 	class="leftbar"
 	on:click={(event) => {
 		event.stopPropagation();
-		$selectedFolders = new Set([]);
+		$selectedFolders = {};
+		console.log('Selected folders:', Object.keys($selectedFolders));
 	}}
 >
 	<FolderTree folderId={'00000000-0000-0000-0000-000000000000'} />

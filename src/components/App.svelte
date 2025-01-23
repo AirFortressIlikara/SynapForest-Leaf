@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-21 21:43:19
+  LastEditTime: 2025-01-22 10:41:39
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -35,7 +35,7 @@
 	<!-- 主区域 -->
 	<div class="main-area">
 		<Toolbar>Toolbar Content</Toolbar>
-		<MainContent>Main Content</MainContent>
+		<MainContent />
 	</div>
 
 	<!-- 右边栏 -->

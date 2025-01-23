@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:35
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-20 21:34:17
+  LastEditTime: 2025-01-23 14:19:37
   FilePath: /SynapForest/src/components/ResizableSidebar.svelte
   Description: 
   
@@ -54,6 +54,8 @@
 <!-- 使用内联样式动态设置宽度 -->
 <div class="sidebar" style="width: {width}px;">
     <slot />
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
         class="resizer {isRight ? 'right' : ''}"
         on:mousedown={startResize}
