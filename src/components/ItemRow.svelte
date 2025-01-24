@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 11:21:04
+  LastEditTime: 2025-01-24 14:55:52
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -31,7 +31,7 @@
 	console.log('Row item IDs:', rowItemIDs);
 
 	$: rowHeight =
-		(elementWidth - rowItemIDs.length * 0) /
+		(elementWidth - rowItemIDs.length * 20) /
 		rowItemIDs.reduce((acc: number, id: string) => {
 			const item = get(items)[id];
 			if (item && item.height !== 0) {
@@ -82,6 +82,7 @@
 	.image-row {
 		display: flex;
 		flex-direction: row;
+		justify-content: space-around;
 	}
 	.image-row .image-item {
 		display: flex;
