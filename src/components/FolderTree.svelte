@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-23 15:12:34
+  LastEditTime: 2025-01-24 14:58:39
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -18,7 +18,7 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { folders, selectedFolders } from './stores';
+	import { folders, selectedFolderIDs } from './stores';
 	import { fetchFolders } from './api';
 	import type { Folder } from './type';
 
@@ -56,20 +56,20 @@
 	});
 
 	function handleFolderClick(event: MouseEvent, folderId: string) {
-		selectedFolders.update(($selectedFolders) => {
-			let newSelectedFolders = { ...$selectedFolders };
+		selectedFolderIDs.update(($selectedFolderIDs) => {
+			let newselectedFolderIDs = { ...$selectedFolderIDs };
 			if (event.ctrlKey) {
-				if (newSelectedFolders[folderId]) {
-					delete newSelectedFolders[folderId];
+				if (newselectedFolderIDs[folderId]) {
+					delete newselectedFolderIDs[folderId];
 				} else {
-					newSelectedFolders[folderId] = true;
+					newselectedFolderIDs[folderId] = true;
 				}
 			} else {
-				newSelectedFolders = { [folderId]: true };
+				newselectedFolderIDs = { [folderId]: true };
 			}
-			return newSelectedFolders;
+			return newselectedFolderIDs;
 		});
-		console.log('Selected folders:', Object.keys($selectedFolders));
+		console.log('Selected folders:', Object.keys($selectedFolderIDs));
 	}
 </script>
 
@@ -82,7 +82,7 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="folder-name {folder.id in $selectedFolders ? 'selected' : ''}"
+			class="folder-name {folder.id in $selectedFolderIDs ? 'selected' : ''}"
 			on:click={(event) => {
 				event.stopPropagation();
 				handleFolderClick(event, folder.id);

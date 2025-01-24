@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 14:55:52
+  LastEditTime: 2025-01-24 15:11:15
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -19,12 +19,12 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import { items } from './stores';
+	import { selectedItemIDs } from './stores';
 
 	export let rowItemIDs: string[];
 
 	export let elementWidth: number = 0;
 
-	let itemSelection: Record<string, boolean> = {};
 	let editingImageId = null;
 	let editedName = '';
 
@@ -41,14 +41,37 @@
 				return acc + 1;
 			}
 		}, 0);
+
+	function handleItemClick(event: MouseEvent, folderId: string) {
+		selectedItemIDs.update(($selectedItemIDs) => {
+			let newselectedItemIDs = { ...$selectedItemIDs };
+			if (event.ctrlKey) {
+				if (newselectedItemIDs[folderId]) {
+					delete newselectedItemIDs[folderId];
+				} else {
+					newselectedItemIDs[folderId] = true;
+				}
+			} else {
+				newselectedItemIDs = { [folderId]: true };
+			}
+			return newselectedItemIDs;
+		});
+		console.log('Selected items:', Object.keys($selectedItemIDs));
+	}
 </script>
 
 <div class="image-row" style="height: {rowHeight + 60}px;">
 	{#each rowItemIDs as itemID}
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="image-item"
+			class="image-item {itemID in $selectedItemIDs ? 'selected' : ''}"
 			style="height: {rowHeight + 60}px; width: {(rowHeight * get(items)[itemID].width) /
 				get(items)[itemID].height}px;"
+			on:click={(event) => {
+				event.stopPropagation();
+				handleItemClick(event, itemID);
+			}}
 		>
 			<img
 				src={get(items)[itemID].raw_url}
@@ -79,6 +102,10 @@
 </div>
 
 <style>
+	.selected {
+		box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+		background-color: #f0f0f0;
+	}
 	.image-row {
 		display: flex;
 		flex-direction: row;

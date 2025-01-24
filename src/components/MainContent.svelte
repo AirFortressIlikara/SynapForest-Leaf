@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 11:15:25
+  LastEditTime: 2025-01-24 15:16:06
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -19,7 +19,9 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import ItemRow from './ItemRow.svelte';
-	import { sortedIds } from './stores';
+	import { selectedItemIDs, sortedIds } from './stores';
+	import { browser } from '$app/environment';
+	import { onDestroy } from 'svelte';
 
 	let isLoading = false;
 
@@ -46,6 +48,30 @@
 			}
 		};
 	}
+
+	if (browser) {
+		function handleSelectAll(event: KeyboardEvent) {
+			if (event.ctrlKey && event.key === 'a') {
+				event.preventDefault();
+				selectedItemIDs.update(() =>
+					$sortedIds.reduce(
+						(acc, itemId) => {
+							acc[itemId] = true;
+							return acc;
+						},
+						{} as Record<string, boolean>
+					)
+				);
+				console.log('Selected items:', Object.keys($selectedItemIDs));
+			}
+		}
+
+		document.addEventListener('keydown', handleSelectAll);
+
+		onDestroy(() => {
+			document.removeEventListener('keydown', handleSelectAll);
+		});
+	}
 </script>
 
 <div class="container" use:measureWidth>
@@ -55,7 +81,16 @@
 		</div>
 	{/if}
 
-	<div class="image-grid">
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="image-grid"
+		on:click={(event) => {
+			event.stopPropagation();
+			$selectedItemIDs = {};
+			console.log('Selected Items:', Object.keys($selectedItemIDs));
+		}}
+	>
 		{#each groupedItems as rowItemIDs}
 			<ItemRow {rowItemIDs} {elementWidth} />
 		{/each}

@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-23 16:10:57
+ * @LastEditTime: 2025-01-24 14:58:24
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -38,7 +38,8 @@ export const folders = writable<Record<string, Folder>>({
 export const tags = writable<Record<string, Tag>>({});
 export const items = writable<Record<string, Item>>({});
 
-export const selectedFolders = writable<Record<string, boolean>>({});
+export const selectedFolderIDs = writable<Record<string, boolean>>({});
+export const selectedItemIDs = writable<Record<string, boolean>>({});
 
 export const serverAddress = writable<string>('http://127.0.0.1:41595'); // 默认值为空字符串
 export const token = writable<string>('TEST123123'); // 默认值为空字符串
@@ -60,9 +61,9 @@ export const sortedIds = derived(
 );
 
 const fetchedItems = derived(
-    selectedFolders,
-    ($selectedFolders, set) => {
-        const folderIds = Object.keys($selectedFolders);
+    selectedFolderIDs,
+    ($selectedFolderIDs, set) => {
+        const folderIds = Object.keys($selectedFolderIDs);
 
         fetchItems({ folder_ids: folderIds })
             .then((data) => {

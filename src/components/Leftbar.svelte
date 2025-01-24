@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-23 15:14:55
+  LastEditTime: 2025-01-24 15:13:41
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -19,15 +19,15 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import FolderTree from './FolderTree.svelte';
-	import { folders, selectedFolders } from './stores';
+	import { folders, selectedFolderIDs } from './stores';
 	import { browser } from '$app/environment';
 	import { get } from 'svelte/store';
 
-	if (browser) {
+	if (browser && false) {
 		function handleSelectAll(event: KeyboardEvent) {
 			if (event.ctrlKey && event.key === 'a') {
 				event.preventDefault();
-				selectedFolders.update(() =>
+				selectedFolderIDs.update(() =>
 					Object.keys($folders).reduce(
 						(acc, folderID) => {
 							acc[folderID] = true;
@@ -36,7 +36,7 @@
 						{} as Record<string, boolean>
 					)
 				);
-				console.log('Selected folders:', Object.keys($selectedFolders));
+				console.log('Selected folders:', Object.keys($selectedFolderIDs));
 			}
 		}
 
@@ -54,8 +54,8 @@
 	class="leftbar"
 	on:click={(event) => {
 		event.stopPropagation();
-		$selectedFolders = {};
-		console.log('Selected folders:', Object.keys($selectedFolders));
+		$selectedFolderIDs = {};
+		console.log('Selected folders:', Object.keys($selectedFolderIDs));
 	}}
 >
 	<FolderTree folderId={'00000000-0000-0000-0000-000000000000'} />
