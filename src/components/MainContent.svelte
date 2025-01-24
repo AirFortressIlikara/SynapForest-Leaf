@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 15:16:06
+  LastEditTime: 2025-01-24 15:47:33
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -19,7 +19,7 @@
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import ItemRow from './ItemRow.svelte';
-	import { selectedItemIDs, sortedIds } from './stores';
+	import { itemsPerRow, selectedItemIDs, sortedIds } from './stores';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
 
@@ -30,7 +30,7 @@
 			array.slice(index * size, index * size + size)
 		);
 	}
-	$: groupedItems = chunkArray($sortedIds, 3);
+	$: groupedItems = chunkArray($sortedIds, $itemsPerRow);
 
 	let elementWidth: number = 0;
 

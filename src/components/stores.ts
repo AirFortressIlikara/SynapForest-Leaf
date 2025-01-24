@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-24 14:58:24
+ * @LastEditTime: 2025-01-24 15:46:35
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -19,9 +19,12 @@
 import { derived, writable } from 'svelte/store';
 import type { Folder, Item, Tag } from './type';
 import { fetchItems } from './api';
-import { browser } from '$app/environment';
 
-// 创建一个 writable store 来存储 Folder 数组
+export const itemsPerRow = writable<number>(3);
+
+export const serverAddress = writable<string>('http://127.0.0.1:41595');
+export const token = writable<string>('TEST123123');
+
 export const folders = writable<Record<string, Folder>>({
     "00000000-0000-0000-0000-000000000000": {
         id: "00000000-0000-0000-0000-000000000000",
@@ -40,9 +43,6 @@ export const items = writable<Record<string, Item>>({});
 
 export const selectedFolderIDs = writable<Record<string, boolean>>({});
 export const selectedItemIDs = writable<Record<string, boolean>>({});
-
-export const serverAddress = writable<string>('http://127.0.0.1:41595'); // 默认值为空字符串
-export const token = writable<string>('TEST123123'); // 默认值为空字符串
 
 export const sortOrder = writable<'asc' | 'desc'>('asc');
 
@@ -79,7 +79,7 @@ const fetchedItems = derived(
 fetchedItems.subscribe((value) => {
     let itemsRecord: Record<string, Item> = {};
     itemsRecord = value.reduce((acc, item) => {
-        acc[item.id] = item; // 假设 item.id 是唯一的
+        acc[item.id] = item;
         return acc;
     }, {} as Record<string, Item>);
 

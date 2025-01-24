@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 15:11:15
+  LastEditTime: 2025-01-24 15:25:43
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -110,6 +110,8 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-around;
+		margin-top: 5px;
+		margin-bottom: 5px;
 	}
 	.image-row .image-item {
 		display: flex;

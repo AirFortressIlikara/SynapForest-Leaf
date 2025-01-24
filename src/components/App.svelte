@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 10:59:35
+  LastEditTime: 2025-01-24 15:45:27
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -20,30 +20,25 @@
 	import ResizableSidebar from './ResizableSidebar.svelte';
 	import Toolbar from './Toolbar.svelte';
 	import MainContent from './MainContent.svelte';
-	import FolderTree from './FolderTree.svelte';
 	import Leftbar from './Leftbar.svelte';
+	import RightBar from './RightBar.svelte';
 </script>
 
 <div class="app">
-	<!-- 左边栏 -->
 	<ResizableSidebar width={300}>
 		<div class="sidebar-content">
 			<Leftbar />
 		</div>
 	</ResizableSidebar>
 
-	<!-- 主区域 -->
 	<div class="main-area">
 		<Toolbar>Toolbar Content</Toolbar>
 		<MainContent />
 	</div>
 
-	<!-- 右边栏 -->
 	<ResizableSidebar width={300} isRight={true}>
 		<div class="sidebar-content">
-			<h2>Right Sidebar</h2>
-			<p>This is the right sidebar content.</p>
-			<button on:click={() => alert('Button clicked!')}>Click Me</button>
+			<RightBar />
 		</div>
 	</ResizableSidebar>
 </div>
@@ -65,9 +60,5 @@
 	.sidebar-content {
 		padding: 10px;
 		height: 100%;
-	}
-
-	.sidebar-content h2 {
-		margin-top: 0;
 	}
 </style>
