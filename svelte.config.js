@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 21:02:23
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-23 14:28:54
+ * @LastEditTime: 2025-01-24 16:03:30
  * @FilePath: /SynapForest/svelte.config.js
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { mdsvex } from 'mdsvex';
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
