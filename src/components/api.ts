@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-23 18:43:31
+ * @LastEditTime: 2025-01-24 11:06:13
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -137,6 +137,7 @@ export const fetchItems = async (params = {}) => {
 
             preview_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/previews/${item.id}` : '',
             thumbnail_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/thumbnails/${item.id}` : '',
+            raw_url: `${address}/raw_files/${item.id}`,
         }))
 
         console.log('Fetched items:', items);

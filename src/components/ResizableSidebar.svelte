@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:35
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-23 14:19:37
+  LastEditTime: 2025-01-24 10:55:33
   FilePath: /SynapForest/src/components/ResizableSidebar.svelte
   Description: 
   
@@ -17,7 +17,7 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-    export let width = 200; // 默认宽度
+    export let width = 300; // 默认宽度
     export let isRight = false; // 是否为右侧边栏
     let isResizing = false;
     let startX = 0; // 记录拖动开始时的鼠标位置

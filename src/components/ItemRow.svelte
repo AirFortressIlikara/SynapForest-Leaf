@@ -1,10 +1,28 @@
+<!--
+  Author: Ilikara 3435193369@qq.com
+  Date: 2025-01-22 11:15:47
+  LastEditors: Ilikara 3435193369@qq.com
+  LastEditTime: 2025-01-24 11:21:04
+  FilePath: /SynapForest/src/components/ItemRow.svelte
+  Description: 
+  
+  Copyright (c) 2025 AirFortressIlikara
+  SynapForest is licensed under Mulan PubL v2.
+  You can use this software according to the terms and conditions of the Mulan PubL v2.
+  You may obtain a copy of Mulan PubL v2 at:
+           http://license.coscl.org.cn/MulanPubL-2.0
+  THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+  EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+  MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+  See the Mulan PubL v2 for more details.
+-->
 <script lang="ts">
 	import { get } from 'svelte/store';
 	import { items } from './stores';
 
 	export let rowItemIDs: string[];
 
-	let elementWidth: number = 0;
+	export let elementWidth: number = 0;
 
 	let itemSelection: Record<string, boolean> = {};
 	let editingImageId = null;
@@ -13,69 +31,77 @@
 	console.log('Row item IDs:', rowItemIDs);
 
 	$: rowHeight =
-		(elementWidth - (rowItemIDs.length + 1) * 10) /
+		(elementWidth - rowItemIDs.length * 0) /
 		rowItemIDs.reduce((acc: number, id: string) => {
 			const item = get(items)[id];
-			if (item && item.width !== 0) {
-				return acc + item.height / item.width;
+			if (item && item.height !== 0) {
+				return acc + item.width / item.height;
 			} else {
 				console.warn(`Item with id "${id}" not found or height is 0.`);
 				return acc + 1;
 			}
 		}, 0);
-
-	function measureWidth(node: HTMLElement) {
-		const observer = new ResizeObserver((entries) => {
-			for (let entry of entries) {
-				elementWidth = entry.contentRect.width;
-			}
-		});
-		observer.observe(node);
-
-		return {
-			destroy() {
-				observer.unobserve(node);
-			}
-		};
-	}
 </script>
 
-<div class="image-row" use:measureWidth>
+<div class="image-row" style="height: {rowHeight + 60}px;">
 	{#each rowItemIDs as itemID}
 		<div
 			class="image-item"
-			style="height: {rowHeight + 40}px; width: {(rowHeight * get(items)[itemID].width) /
-				get(items)[itemID].height}px; align-items: center;"
+			style="height: {rowHeight + 60}px; width: {(rowHeight * get(items)[itemID].width) /
+				get(items)[itemID].height}px;"
 		>
-			<div
-				class="image-container {itemSelection[itemID] ? 'selected' : ''}"
+			<img
+				src={get(items)[itemID].raw_url}
+				alt={itemID}
 				style="height: {rowHeight}px; width:{(rowHeight * get(items)[itemID].width) /
 					get(items)[itemID].height}px;"
-			>
-				<img src={get(items)[itemID].thumbnail_url} alt={itemID} />
-			</div>
+			/>
 			{#if editingImageId === itemID}
-				<input type="text" bind:value={editedName} style="text-align: center; width: 100%;" />
+				<!-- 编辑模式：显示输入框 -->
+				<input
+					type="text"
+					bind:value={editedName}
+					style="text-align: center; width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px;"
+				/>
 			{:else}
-				<div class="image-name">{get(items)[itemID].name}</div>
+				<!-- 非编辑模式：显示图片名称 -->
+				<div class="image-name" style="padding: 4px;">
+					{get(items)[itemID].name}
+				</div>
 			{/if}
-			<div class="image-date">{get(items)[itemID].modified_at}</div>
+
+			<!-- 显示修改日期 -->
+			<div class="image-date" style="color: #666; font-size: 0.9em;">
+				{get(items)[itemID].modified_at}
+			</div>
 		</div>
 	{/each}
 </div>
 
 <style>
 	.image-row {
-		width: 100%;
 		display: flex;
 		flex-direction: row;
-		gap: 10px;
-		margin: 10px;
+	}
+	.image-row .image-item {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 	}
 	.image-row .image-name {
-		height: 20px;
+		height: 30px;
+		width: 100%;
+		text-align: center;
+		font-size: 1rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.image-row .image-date {
-		height: 20px;
+		height: 30px;
+		width: 100%;
+		text-align: center;
+		font-size: 1rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 </style>

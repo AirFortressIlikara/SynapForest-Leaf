@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-22 10:41:39
+  LastEditTime: 2025-01-24 10:59:35
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -26,7 +26,7 @@
 
 <div class="app">
 	<!-- 左边栏 -->
-	<ResizableSidebar width={200}>
+	<ResizableSidebar width={300}>
 		<div class="sidebar-content">
 			<Leftbar />
 		</div>
@@ -39,7 +39,7 @@
 	</div>
 
 	<!-- 右边栏 -->
-	<ResizableSidebar width={200} isRight={true}>
+	<ResizableSidebar width={300} isRight={true}>
 		<div class="sidebar-content">
 			<h2>Right Sidebar</h2>
 			<p>This is the right sidebar content.</p>
@@ -53,6 +53,7 @@
 		display: flex;
 		height: 100vh;
 		width: 100%;
+		overflow-y: hidden;
 	}
 
 	.main-area {

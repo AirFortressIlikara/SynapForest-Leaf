@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:33:58
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-22 12:02:26
+ * @LastEditTime: 2025-01-24 11:22:30
  * @FilePath: /SynapForest/src/components/type.ts
  * @Description: 
  * 

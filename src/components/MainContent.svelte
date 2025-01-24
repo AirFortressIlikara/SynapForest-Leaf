@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-23 19:33:10
+  LastEditTime: 2025-01-24 11:15:25
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -28,10 +28,27 @@
 			array.slice(index * size, index * size + size)
 		);
 	}
-	$: groupedItems = chunkArray($sortedIds, 4);
+	$: groupedItems = chunkArray($sortedIds, 3);
+
+	let elementWidth: number = 0;
+
+	function measureWidth(node: HTMLElement) {
+		const observer = new ResizeObserver((entries) => {
+			for (let entry of entries) {
+				elementWidth = entry.contentRect.width;
+			}
+		});
+		observer.observe(node);
+
+		return {
+			destroy() {
+				observer.unobserve(node);
+			}
+		};
+	}
 </script>
 
-<div class="container">
+<div class="container" use:measureWidth>
 	{#if false}
 		<div class="drop-overlay">
 			<span>Drop files here to upload</span>
@@ -40,7 +57,7 @@
 
 	<div class="image-grid">
 		{#each groupedItems as rowItemIDs}
-			<ItemRow {rowItemIDs} />
+			<ItemRow {rowItemIDs} {elementWidth} />
 		{/each}
 	</div>
 </div>
@@ -72,6 +89,6 @@
 		height: 100%;
 		width: 100%;
 		overflow-y: scroll;
-		overflow-x:scroll;
+		contain: size;
 	}
 </style>
