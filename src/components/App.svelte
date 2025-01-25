@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 15:45:27
+  LastEditTime: 2025-01-25 17:40:52
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -32,7 +32,7 @@
 	</ResizableSidebar>
 
 	<div class="main-area">
-		<Toolbar>Toolbar Content</Toolbar>
+		<Toolbar />
 		<MainContent />
 	</div>
 
