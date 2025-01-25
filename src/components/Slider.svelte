@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-25 17:32:44
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 18:01:23
+  LastEditTime: 2025-01-25 20:25:15
   FilePath: /SynapForest/src/components/Slider.svelte
   Description: 
   
@@ -67,6 +67,8 @@
 	});
 </script>
 
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="slider {style_class}" bind:this={slider} on:mousedown={handleMouseDown}>
 	<div class="slider-thumb" style="left: {((value - min) / (max - min)) * 100}%;"></div>
 </div>
@@ -76,7 +78,7 @@
 		position: relative;
 		width: 100%;
 		height: 10px;
-		background-color: #ddd;
+		background-color: #fff;
 		border-radius: 5px;
 		cursor: pointer;
         margin: 10px;

@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 19:30:55
+  LastEditTime: 2025-01-25 21:10:21
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -24,6 +24,11 @@
 	$: firstSelectedItem = $items[Object.keys($selectedItemIDs)[0]];
 
 	console.log('right bar content:', firstSelectedItem);
+
+	$: totalSize =
+		selectItemCount == 0
+			? Object.values($items).reduce((sum, item) => sum + item.size, 0)
+			: Object.keys($selectedItemIDs).reduce((sum, itemID) => sum + $items[itemID].size, 0);
 </script>
 
 <div class="rightbar">
@@ -33,9 +38,9 @@
 			<div>{m.selected_count({ count: selectItemCount })}</div>
 		{/if}
 		{#if selectItemCount === 1}
-			<h3>{firstSelectedItem.name || '文件名'}</h3>
-			<h3>{firstSelectedItem.annotation || '注释'}</h3>
-			<h3>{firstSelectedItem.url || 'Url'}</h3>
+			<input type="text" bind:value={firstSelectedItem.name} placeholder="文件名" />
+			<input type="text" bind:value={firstSelectedItem.annotation} placeholder="注释" />
+			<input type="text" bind:value={firstSelectedItem.url} placeholder="Url" />
 		{/if}
 		<div>
 			<strong>Tags:</strong>
@@ -59,23 +64,23 @@
 	<div>
 		{#if selectItemCount == 0}
 			<strong>Folder Info:</strong>
-			<ul>
-				<li>Size: bytes</li>
-			</ul>
 		{:else}
 			<strong>File Info:</strong>
-			<ul>
-				{#if selectItemCount == 1}
-					<li>Size: {firstSelectedItem.size} bytes</li>
-					<li>Type: {firstSelectedItem.ext}</li>
-					<li>Dimensions: {firstSelectedItem.width}x{firstSelectedItem.height}</li>
-					<li>Created: {firstSelectedItem.created_at}</li>
-					<li>Modified: {firstSelectedItem.modified_at}</li>
-				{:else}
-					<li>Size: bytes</li>
-				{/if}
-			</ul>
 		{/if}
+		<div class="info-grid">
+			<div><strong>Size:</strong></div>
+			<div>{totalSize} bytes</div>
+			{#if selectItemCount == 1}
+				<div><strong>Type:</strong></div>
+				<div>{firstSelectedItem.ext}</div>
+				<div><strong>Dimensions:</strong></div>
+				<div>{firstSelectedItem.width}x{firstSelectedItem.height}</div>
+				<div><strong>Created:</strong></div>
+				<div>{firstSelectedItem.created_at}</div>
+				<div><strong>Modified:</strong></div>
+				<div>{firstSelectedItem.modified_at}</div>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -83,10 +88,39 @@
 	.rightbar {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		overflow-x: hidden;
+		overflow-y: auto;
+		height: 100%;
+		width: 100%;
 	}
 	img {
 		max-width: 100%;
-		height: auto;
+		max-height: 20%;
+		object-fit: contain;
+	}
+	.info-grid {
+		width: 100%;
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 8px;
+		align-items: center;
+	}
+	.info-grid strong {
+		font-weight: bold;
+	}
+	input {
+		width: 100%; /* 设置输入框宽度 */
+		text-align: left; /* 文字左对齐 */
+		padding: 8px;
+		margin: 5px 0;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		white-space: nowrap; /* 防止文字换行 */
+		overflow: hidden; /* 超出部分隐藏 */
+		text-overflow: ellipsis; /* 超出部分显示省略号 */
+	}
+	input:not(:focus) {
+		background-color: #f9f9f9; /* 非编辑状态下背景色 */
+		cursor: default; /* 非编辑状态下鼠标样式 */
 	}
 </style>

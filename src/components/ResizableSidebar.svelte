@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:35
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 10:55:33
+  LastEditTime: 2025-01-25 21:09:47
   FilePath: /SynapForest/src/components/ResizableSidebar.svelte
   Description: 
   
@@ -65,9 +65,10 @@
 <style>
     .sidebar {
         height: 100%;
-        background-color: #f0f0f0;
+        background-color: #e0e0e0;
         position: relative;
-        border-right: 1px solid #ccc;
+        /* border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc; */
     }
 
     .resizer {

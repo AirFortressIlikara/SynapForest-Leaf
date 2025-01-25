@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:16
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 17:56:16
+  LastEditTime: 2025-01-25 20:26:14
   FilePath: /SynapForest/src/components/Toolbar.svelte
   Description: 
   
@@ -23,14 +23,14 @@
 
 <div class="toolbar">
 	<div class="slider">
-		<Slider bind:value={$itemsPerRow} min={2} max={5} />
+		<Slider bind:value={$itemsPerRow} min={1} max={7} />
 	</div>
 </div>
 
 <style>
 	.toolbar {
 		height: 50px;
-		background-color: #333;
+		background-color: #d0d0d0;
 		color: white;
 		display: flex;
 		flex-direction: row;
