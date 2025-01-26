@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 12:01:54
+  LastEditTime: 2025-01-26 16:19:22
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -80,20 +80,17 @@
 					get(items)[itemID].height}px;"
 			/>
 			{#if editingImageId === itemID}
-				<!-- 编辑模式：显示输入框 -->
 				<input
 					type="text"
 					bind:value={editedName}
 					style="text-align: center; width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px;"
 				/>
 			{:else}
-				<!-- 非编辑模式：显示图片名称 -->
 				<div class="image-name" style="padding: 4px;">
 					{get(items)[itemID].name}
 				</div>
 			{/if}
 
-			<!-- 显示修改日期 -->
 			<div class="image-date" style="color: #666; font-size: 0.9em;">
 				{get(items)[itemID].modified_at}
 			</div>

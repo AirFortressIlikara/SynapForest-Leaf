@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-24 11:06:13
+ * @LastEditTime: 2025-01-26 16:23:32
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -27,8 +27,8 @@ import type { Folder, Item } from './type';
  */
 export const fetchFolders = async (params = {}) => {
     try {
-        const address = get(serverAddress); // 从 store 中获取服务器地址
-        const authToken = get(token); // 从 store 中获取 token
+        const address = get(serverAddress);
+        const authToken = get(token);
 
         if (!address || !authToken) {
             throw new Error('Server address or token is missing');
@@ -57,17 +57,16 @@ export const fetchFolders = async (params = {}) => {
             throw new Error(result.message || 'Unknown error occurred');
         }
 
-        // 将后端返回的数据转换为前端需要的格式
         const folders: Folder[] = result.data.map((folder: Folder) => ({
             id: folder.id,
             name: folder.name,
             description: folder.description,
-            items: folder.items,
+            items: folder.items ? folder.items : [],
             parent: folder.parent,
-            sub_folders: folder.sub_folders,
+            sub_folders: folder.sub_folders ? folder.sub_folders : [],
             modified_at: folder.modified_at,
-            isExpanded: false, // 默认折叠
-            isEditing: false, // 默认不在编辑状态
+            tags: folder.tags ? folder.tags : [],
+            isExpand: folder.isExpand,
         }));
 
         console.log('Fetched folders:', folders);
@@ -75,14 +74,14 @@ export const fetchFolders = async (params = {}) => {
         return folders;
     } catch (error) {
         console.error('Error fetching folders:', error);
-        return []; // 返回空数组表示失败
+        return [];
     }
 };
 
 export const fetchItems = async (params = {}) => {
     try {
-        const address = get(serverAddress); // 从 store 中获取服务器地址
-        const authToken = get(token); // 从 store 中获取 token
+        const address = get(serverAddress);
+        const authToken = get(token);
 
         if (!address || !authToken) {
             throw new Error('Server address or token is missing');
@@ -111,7 +110,7 @@ export const fetchItems = async (params = {}) => {
             throw new Error(result.message || 'Unknown error occurred');
         }
 
-        const items: Item[] = result.data.map((item: Item) => ({
+        const items: Item[] = result.data?.map((item: Item) => ({
             id: item.id,
             created_at: item.created_at,
             imported_at: item.imported_at,
@@ -138,13 +137,13 @@ export const fetchItems = async (params = {}) => {
             preview_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/previews/${item.id}` : '',
             thumbnail_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/thumbnails/${item.id}` : '',
             raw_url: `${address}/raw_files/${item.id}`,
-        }))
+        })) || []
 
         console.log('Fetched items:', items);
 
         return items;
     } catch (error) {
         console.error('Error fetching folders:', error);
-        return []; // 返回空数组表示失败
+        return [];
     }
 };

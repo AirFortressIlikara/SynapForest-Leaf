@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 15:13:41
+  LastEditTime: 2025-01-26 16:19:39
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -21,7 +21,6 @@
 	import FolderTree from './FolderTree.svelte';
 	import { folders, selectedFolderIDs } from './stores';
 	import { browser } from '$app/environment';
-	import { get } from 'svelte/store';
 
 	if (browser && false) {
 		function handleSelectAll(event: KeyboardEvent) {

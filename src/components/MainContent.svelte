@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 16:00:43
+  LastEditTime: 2025-01-26 16:19:52
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -17,7 +17,6 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { get } from 'svelte/store';
 	import ItemRow from './ItemRow.svelte';
 	import { itemsPerRow, selectedItemIDs, sortedIds } from './stores';
 	import { browser } from '$app/environment';
