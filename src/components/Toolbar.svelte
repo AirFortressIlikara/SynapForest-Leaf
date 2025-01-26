@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:16
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 20:26:14
+  LastEditTime: 2025-01-26 11:49:42
   FilePath: /SynapForest/src/components/Toolbar.svelte
   Description: 
   
@@ -38,6 +38,7 @@
 		padding: 0 10px;
 	}
 	.slider {
-		width: 20%;
+		width: 20vh;
+		max-width: 40%;
 	}
 </style>

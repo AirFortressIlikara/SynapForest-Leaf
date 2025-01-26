@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:35
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 21:09:47
+  LastEditTime: 2025-01-26 11:48:08
   FilePath: /SynapForest/src/components/ResizableSidebar.svelte
   Description: 
   
@@ -17,28 +17,26 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-    export let width = 300; // 默认宽度
-    export let isRight = false; // 是否为右侧边栏
+    export let width = 300;
+    export let isRight = false;
     let isResizing = false;
-    let startX = 0; // 记录拖动开始时的鼠标位置
-    let startWidth = 0; // 记录拖动开始时的宽度
+    let startX = 0;
+    let startWidth = 0;
 
     function startResize(event: MouseEvent) {
         isResizing = true;
-        startX = event.clientX; // 记录初始鼠标位置
-        startWidth = width; // 记录初始宽度
+        startX = event.clientX;
+        startWidth = width;
         window.addEventListener("mousemove", onMouseMove);
         window.addEventListener("mouseup", stopResize);
     }
 
     function onMouseMove(event: MouseEvent) {
         if (isResizing) {
-            const deltaX = event.clientX - startX; // 计算鼠标移动的距离
+            const deltaX = event.clientX - startX;
             if (isRight) {
-                // 右侧边栏：宽度减少（因为鼠标向左拖动）
                 width = startWidth - deltaX;
             } else {
-                // 左侧边栏：宽度增加
                 width = startWidth + deltaX;
             }
         }
@@ -51,7 +49,6 @@
     }
 </script>
 
-<!-- 使用内联样式动态设置宽度 -->
 <div class="sidebar" style="width: {width}px;">
     <slot />
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -67,25 +64,21 @@
         height: 100%;
         background-color: #e0e0e0;
         position: relative;
-        /* border-right: 1px solid #ccc;
-        border-left: 1px solid #ccc; */
     }
 
     .resizer {
-        width: 5px;
+        width: 0.25vw;
         height: 100%;
         background-color: #ccc;
         position: absolute;
-        right: 0;
         top: 0;
         cursor: ew-resize;
     }
-    /* 左侧边栏的拖动条在右侧 */
+
     .resizer:not(.right) {
         right: 0;
     }
 
-    /* 右侧边栏的拖动条在左侧 */
     .resizer.right {
         left: 0;
     }

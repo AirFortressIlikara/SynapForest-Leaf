@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 21:10:21
+  LastEditTime: 2025-01-26 15:51:06
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -17,7 +17,7 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { items, selectedFolderIDs, selectedItemIDs } from './stores';
+	import { folders, items, selectedFolderIDs, selectedItemIDs } from './stores';
 	import * as m from '$lib/paraglide/messages.js';
 
 	$: selectItemCount = Object.keys($selectedItemIDs).length;
@@ -29,6 +29,40 @@
 		selectItemCount == 0
 			? Object.values($items).reduce((sum, item) => sum + item.size, 0)
 			: Object.keys($selectedItemIDs).reduce((sum, itemID) => sum + $items[itemID].size, 0);
+
+	function formatSize(bytes: number) {
+		const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+		let unitIndex = 0;
+
+		while (bytes >= 1024 && unitIndex < units.length - 1) {
+			bytes /= 1024;
+			unitIndex++;
+		}
+
+		return `${bytes.toFixed(2)} ${units[unitIndex]}`;
+	}
+
+	$: commonTagIDs = (() => {
+		const selectedKeys = Object.keys($selectedItemIDs);
+		if (selectedKeys.length === 0) return [];
+
+		const allTagIDs = selectedKeys.map((key) => $items[key].tag_ids);
+
+		return allTagIDs.reduce((acc, tagIDs) => {
+			return acc.filter((id) => tagIDs.includes(id));
+		}, allTagIDs[0] || []);
+	})();
+
+	$: commonFolderIDs = (() => {
+		const selectedKeys = Object.keys($selectedItemIDs);
+		if (selectedKeys.length === 0) return [];
+
+		const allFolderIDs = selectedKeys.map((key) => $items[key].folder_ids);
+
+		return allFolderIDs.reduce((acc, folderIDs) => {
+			return acc.filter((id) => folderIDs.includes(id));
+		}, allFolderIDs[0] || []);
+	})();
 </script>
 
 <div class="rightbar">
@@ -42,26 +76,26 @@
 			<input type="text" bind:value={firstSelectedItem.annotation} placeholder="注释" />
 			<input type="text" bind:value={firstSelectedItem.url} placeholder="Url" />
 		{/if}
-		<div>
+		<div class="tags">
 			<strong>Tags:</strong>
 			<ul>
-				{#each firstSelectedItem.tag_ids as tag}
-					<li>{tag}</li>
+				{#each commonTagIDs as tag}
+					<li class="tag">{tag}</li>
 				{/each}
 			</ul>
 		</div>
 
-		<div>
+		<div class="tags">
 			<strong>Folders:</strong>
 			<ul>
-				{#each firstSelectedItem.folder_ids as folder}
-					<li>{folder}</li>
+				{#each commonFolderIDs as folderID}
+					<li class="tag">{$folders[folderID].name}</li>
 				{/each}
 			</ul>
 		</div>
 	{/if}
 
-	<div>
+	<div class="basic-info">
 		{#if selectItemCount == 0}
 			<strong>Folder Info:</strong>
 		{:else}
@@ -69,7 +103,7 @@
 		{/if}
 		<div class="info-grid">
 			<div><strong>Size:</strong></div>
-			<div>{totalSize} bytes</div>
+			<div>{formatSize(totalSize)}</div>
 			{#if selectItemCount == 1}
 				<div><strong>Type:</strong></div>
 				<div>{firstSelectedItem.ext}</div>
@@ -94,33 +128,50 @@
 		width: 100%;
 	}
 	img {
-		max-width: 100%;
-		max-height: 20%;
-		object-fit: contain;
-	}
-	.info-grid {
+		margin: 2px 0.25vw;
 		width: 100%;
+		height: 20vh;
+		object-fit: contain;
+		border-radius: 0.5vw;
+	}
+	.tags {
+		margin: 0 0.25vw;
+	}
+	.tags .tag {
+		background-color: #e0e0e0;
+		color: #333;
+		padding: 4px 8px;
+		border-radius: 12px;
+		font-size: 1rem;
+		display: inline-block;
+		border: 2px solid #aaa;
+		margin: 2px;
+	}
+	.basic-info {
+		margin: 0 0.25vw;
+	}
+	.basic-info .info-grid {
 		display: grid;
 		grid-template-columns: 1fr 2fr;
 		gap: 8px;
 		align-items: center;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
-	.info-grid strong {
+	.basic-info .info-grid strong {
 		font-weight: bold;
 	}
 	input {
-		width: 100%; /* 设置输入框宽度 */
-		text-align: left; /* 文字左对齐 */
-		padding: 8px;
-		margin: 5px 0;
+		text-align: left;
+		margin: 2px 0.25vw;
 		border: 1px solid #ccc;
-		border-radius: 4px;
-		white-space: nowrap; /* 防止文字换行 */
-		overflow: hidden; /* 超出部分隐藏 */
-		text-overflow: ellipsis; /* 超出部分显示省略号 */
+		border-radius: 0.5vw;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	input:not(:focus) {
-		background-color: #f9f9f9; /* 非编辑状态下背景色 */
-		cursor: default; /* 非编辑状态下鼠标样式 */
+		background-color: #f9f9f9;
+		cursor: default;
 	}
 </style>

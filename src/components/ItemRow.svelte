@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 20:18:58
+  LastEditTime: 2025-01-26 12:01:54
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -103,8 +103,9 @@
 
 <style>
 	.selected {
-		box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+		box-shadow: 0 0 12px rgba(57, 192, 255, 0.3);
 		background-color: #f0f0f0;
+		border-radius: 0.5vw;
 	}
 	.image-row {
 		display: flex;
@@ -133,5 +134,9 @@
 		font-size: 1rem;
 		text-overflow: ellipsis;
 		overflow: hidden;
+	}
+	img{
+		border-radius: 0.5vw;
+		object-fit: cover;
 	}
 </style>

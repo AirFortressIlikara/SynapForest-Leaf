@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-25 17:32:44
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 20:25:15
+  LastEditTime: 2025-01-26 11:50:46
   FilePath: /SynapForest/src/components/Slider.svelte
   Description: 
   
@@ -17,6 +17,7 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { onMount, onDestroy } from 'svelte';
 
 	export let value: number;
@@ -55,16 +56,17 @@
 	const handleMouseUp = () => {
 		isDragging = false;
 	};
+	if (browser) {
+		onMount(() => {
+			window.addEventListener('mousemove', handleMouseMove);
+			window.addEventListener('mouseup', handleMouseUp);
+		});
 
-	onMount(() => {
-		window.addEventListener('mousemove', handleMouseMove);
-		window.addEventListener('mouseup', handleMouseUp);
-	});
-
-	onDestroy(() => {
-		window.removeEventListener('mousemove', handleMouseMove);
-		window.removeEventListener('mouseup', handleMouseUp);
-	});
+		onDestroy(() => {
+			window.removeEventListener('mousemove', handleMouseMove);
+			window.removeEventListener('mouseup', handleMouseUp);
+		});
+	}
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -77,18 +79,18 @@
 	.slider {
 		position: relative;
 		width: 100%;
-		height: 10px;
+		height: 6px;
 		background-color: #fff;
-		border-radius: 5px;
+		border-radius: 3px;
 		cursor: pointer;
-        margin: 10px;
+		margin: 10px;
 	}
 
 	.slider-thumb {
 		position: absolute;
 		top: 50%;
-		width: 20px;
-		height: 20px;
+		width: 12px;
+		height: 12px;
 		background-color: #0078d4;
 		border-radius: 50%;
 		cursor: grab;

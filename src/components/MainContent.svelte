@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 20:24:58
+  LastEditTime: 2025-01-26 16:00:43
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -124,7 +124,7 @@
 		flex-direction: column;
 		height: 100%;
 		width: 100%;
-		overflow-y: scroll;
+		overflow-y: auto;
 		contain: size;
 	}
 </style>
