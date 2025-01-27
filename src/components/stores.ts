@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-24 15:46:35
+ * @LastEditTime: 2025-01-27 16:23:27
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -60,9 +60,11 @@ export const sortedIds = derived(
     [] as string[]
 );
 
+export const itemTrigger = writable<boolean>(false);
+
 const fetchedItems = derived(
-    selectedFolderIDs,
-    ($selectedFolderIDs, set) => {
+    [selectedFolderIDs, itemTrigger],
+    ([$selectedFolderIDs, $itemTrigger], set) => {
         const folderIds = Object.keys($selectedFolderIDs);
 
         fetchItems({ folder_ids: folderIds })

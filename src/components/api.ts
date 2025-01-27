@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-26 16:23:32
+ * @LastEditTime: 2025-01-27 16:26:16
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -78,6 +78,11 @@ export const fetchFolders = async (params = {}) => {
     }
 };
 
+/**
+ * 从后端获取项目数据
+ * @param params 请求参数
+ * @returns 项目列表
+ */
 export const fetchItems = async (params = {}) => {
     try {
         const address = get(serverAddress);
@@ -146,4 +151,92 @@ export const fetchItems = async (params = {}) => {
         console.error('Error fetching folders:', error);
         return [];
     }
+};
+
+/**
+ * 上传文件到服务器
+ * @param files 要上传的文件列表
+ * @param folder_ids 文件所属的文件夹ID列表
+ * @returns 上传结果
+ */
+export const uploadFiles = async (files: File[], folder_ids: string[]) => {
+    try {
+        // 上传文件到服务器
+        const uploadResult = await uploadFilesToServer(files);
+        console.log('Files uploaded:', uploadResult);
+
+        // 将文件路径添加到数据库
+        const addPathsResult = await addFilesFromPaths(
+            files.map((file) => file.name),
+            folder_ids
+        );
+        console.log('Paths added to database:', addPathsResult);
+
+        return { uploadResult, addPathsResult };
+    } catch (error) {
+        console.error('Error during file upload and processing:', error);
+        throw error;
+    }
+};
+
+/**
+ * 上传文件到服务器的逻辑
+ * @param files 要上传的文件列表
+ * @returns 上传结果
+ */
+const uploadFilesToServer = async (files: File[]) => {
+    const address = get(serverAddress);
+    const authToken = get(token);
+    // todo: Auth
+    if (!address || !authToken) {
+        throw new Error('Server address or token is missing');
+    }
+
+    const formData = new FormData();
+    files.forEach((file) => formData.append('files', file));
+
+    const response = await fetch(`${address}/api/uploadfiles`, {
+        method: 'POST',
+        body: formData,
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to upload files');
+    }
+
+    return response.json();
+};
+
+/**
+ * 将文件路径添加到数据库的逻辑
+ * @param fileNames 文件名列表
+ * @param folder_ids 文件所属的文件夹ID列表
+ * @returns 添加结果
+ */
+const addFilesFromPaths = async (fileNames: string[], folder_ids: string[]) => {
+    const address = get(serverAddress);
+    const authToken = get(token);
+
+    if (!address || !authToken) {
+        throw new Error('Server address or token is missing');
+    }
+
+    const response = await fetch(`${address}/api/item/addFromPaths`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+            file_names: fileNames,
+            folder_ids: folder_ids,
+            token: authToken,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to add files from paths');
+    }
+
+    return response.json();
 };

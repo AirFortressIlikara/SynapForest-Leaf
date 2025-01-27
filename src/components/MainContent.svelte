@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 16:19:52
+  LastEditTime: 2025-01-27 16:23:49
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -18,9 +18,10 @@
 -->
 <script lang="ts">
 	import ItemRow from './ItemRow.svelte';
-	import { itemsPerRow, selectedItemIDs, sortedIds } from './stores';
+	import { itemsPerRow, itemTrigger, selectedFolderIDs, selectedItemIDs, sortedIds } from './stores';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
+	import { uploadFiles } from './api';
 
 	let isLoading = false;
 
@@ -46,6 +47,35 @@
 				observer.unobserve(node);
 			}
 		};
+	}
+
+	let isDragging = false;
+
+	function handleDragOver(event: DragEvent) {
+		event.preventDefault();
+		isDragging = true;
+	}
+
+	function handleDragLeave(event: DragEvent) {
+		event.preventDefault();
+		isDragging = false;
+	}
+
+	async function handleDrop(event: DragEvent) {
+		event.preventDefault();
+		isDragging = false;
+
+		const files = event.dataTransfer?.files;
+		if (files && files.length > 0) {
+			try {
+				const result = await uploadFiles(Array.from(files), Object.keys($selectedFolderIDs));
+				console.log('Upload result:', result);
+			} catch (error) {
+				console.error('Error uploading files:', error);
+			} finally {
+				itemTrigger.set(!$itemTrigger);
+			}
+		}
 	}
 
 	if (browser) {
@@ -74,12 +104,6 @@
 </script>
 
 <div class="container" use:measureWidth>
-	{#if false}
-		<div class="drop-overlay">
-			<span>Drop files here to upload</span>
-		</div>
-	{/if}
-
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
@@ -89,6 +113,10 @@
 			$selectedItemIDs = {};
 			console.log('Selected Items:', Object.keys($selectedItemIDs));
 		}}
+		on:dragover={handleDragOver}
+		on:dragleave={handleDragLeave}
+		on:drop={handleDrop}
+		class:is-dragging={isDragging}
 	>
 		{#each groupedItems as rowItemIDs}
 			<ItemRow {rowItemIDs} {elementWidth} />
@@ -104,20 +132,6 @@
 		background-color: #e0e0e0;
 	}
 
-	.drop-overlay {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.6);
-		z-index: 9999;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: white;
-		font-size: 1.5rem;
-		pointer-events: none;
-	}
-
 	.image-grid {
 		display: flex;
 		flex-direction: column;
@@ -125,5 +139,10 @@
 		width: 100%;
 		overflow-y: auto;
 		contain: size;
+	}
+
+	.is-dragging {
+		border: 2px dashed #000;
+		background-color: #f0f0f0;
 	}
 </style>
