@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-27 16:26:16
+ * @LastEditTime: 2025-01-27 22:11:51
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -36,13 +36,13 @@ export const fetchFolders = async (params = {}) => {
 
         const body = JSON.stringify({
             ...params,
-            token: authToken,
         });
 
         const response = await fetch(`${address}/api/folder/list`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
             },
             body: body,
         });
@@ -94,13 +94,13 @@ export const fetchItems = async (params = {}) => {
 
         const body = JSON.stringify({
             ...params,
-            token: authToken,
         });
 
         const response = await fetch(`${address}/api/item/list`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
             },
             body: body,
         });
@@ -139,9 +139,9 @@ export const fetchItems = async (params = {}) => {
             have_thumbnail: item.have_thumbnail,
             have_preview: item.have_preview,
 
-            preview_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/previews/${item.id}` : '',
-            thumbnail_url: item.ext == "gif" ? `${address}/raw_files/${item.id}` : item.have_thumbnail ? `${address}/thumbnails/${item.id}` : '',
-            raw_url: `${address}/raw_files/${item.id}`,
+            preview_url: item.ext == "gif" ? `${address}/public/raw_files/${item.id}` : item.have_thumbnail ? `${address}/public/previews/${item.id}` : '',
+            thumbnail_url: item.ext == "gif" ? `${address}/public/raw_files/${item.id}` : item.have_thumbnail ? `${address}/public/thumbnails/${item.id}` : '',
+            raw_url: `${address}/public/raw_files/${item.id}`,
         })) || []
 
         console.log('Fetched items:', items);
@@ -197,6 +197,9 @@ const uploadFilesToServer = async (files: File[]) => {
 
     const response = await fetch(`${address}/api/uploadfiles`, {
         method: 'POST',
+        headers: {
+            Authorization: `${authToken}`,
+        },
         body: formData,
     });
 
@@ -225,12 +228,11 @@ const addFilesFromPaths = async (fileNames: string[], folder_ids: string[]) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `${authToken}`,
         },
         body: JSON.stringify({
             file_names: fileNames,
             folder_ids: folder_ids,
-            token: authToken,
         }),
     });
 

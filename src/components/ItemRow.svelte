@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 16:19:22
+  LastEditTime: 2025-01-27 21:51:23
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -20,6 +20,7 @@
 	import { get } from 'svelte/store';
 	import { items } from './stores';
 	import { selectedItemIDs } from './stores';
+	import AuthImg from './AuthImg.svelte';
 
 	export let rowItemIDs: string[];
 
@@ -132,7 +133,7 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-	img{
+	img {
 		border-radius: 0.5vw;
 		object-fit: cover;
 	}
