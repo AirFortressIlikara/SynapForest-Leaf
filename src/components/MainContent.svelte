@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-27 16:23:49
+  LastEditTime: 2025-01-30 14:50:22
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -18,10 +18,16 @@
 -->
 <script lang="ts">
 	import ItemRow from './ItemRow.svelte';
-	import { itemsPerRow, itemTrigger, selectedFolderIDs, selectedItemIDs, sortedIds } from './stores';
+	import {
+		itemsPerRow,
+		itemTrigger,
+		selectedFolderIDs,
+		selectedItemIDs,
+		sortedIds
+	} from './stores';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
-	import { uploadFiles } from './api';
+	import { delItems, uploadFiles } from './api';
 
 	let isLoading = false;
 
@@ -79,7 +85,7 @@
 	}
 
 	if (browser) {
-		function handleSelectAll(event: KeyboardEvent) {
+		async function handleKeyDown(event: KeyboardEvent) {
 			if (event.ctrlKey && event.key === 'a') {
 				event.preventDefault();
 				selectedItemIDs.update(() =>
@@ -92,13 +98,25 @@
 					)
 				);
 				console.log('Selected items:', Object.keys($selectedItemIDs));
+			} else if (event.key === 'Delete') {
+				event.preventDefault();
+				try {
+					delItems({ item_ids: Object.keys($selectedItemIDs) });
+				} catch (error) {
+					console.error('Error deleting files:', error);
+				} finally {
+					console.log('Deleted items:', Object.keys($selectedItemIDs));
+					$selectedItemIDs = {};
+					itemTrigger.set(!$itemTrigger);
+				}
+			} else if (event.key === 'Enter') {
 			}
 		}
 
-		document.addEventListener('keydown', handleSelectAll);
+		document.addEventListener('keydown', handleKeyDown);
 
 		onDestroy(() => {
-			document.removeEventListener('keydown', handleSelectAll);
+			document.removeEventListener('keydown', handleKeyDown);
 		});
 	}
 </script>

@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-27 22:11:51
+ * @LastEditTime: 2025-01-29 21:09:36
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -19,6 +19,45 @@
 import { get } from 'svelte/store';
 import { serverAddress, token } from './stores';
 import type { Folder, Item } from './type';
+
+export const delItems = async (params = {}) => {
+    try {
+        const address = get(serverAddress);
+        const authToken = get(token);
+
+        if (!address || !authToken) {
+            throw new Error('Server address or token is missing');
+        }
+
+        const body = JSON.stringify({
+            ...params,
+        });
+
+        const response = await fetch(`${address}/api/item/moveToTrash`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
+            },
+            body: body,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch folders');
+        }
+
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'Unknown error occurred');
+        }
+
+        return;
+    } catch (error) {
+        console.error('Error fetching folders:', error);
+        return;
+    }
+}
 
 /**
  * 从后端获取文件夹数据
