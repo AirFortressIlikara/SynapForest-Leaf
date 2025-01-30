@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 16:19:39
+  LastEditTime: 2025-01-30 16:09:40
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -36,6 +36,10 @@
 					)
 				);
 				console.log('Selected folders:', Object.keys($selectedFolderIDs));
+			} else if (event.key === 'Delete') {
+				event.preventDefault();
+			} else if (event.key === 'Enter') {
+				event.preventDefault();
 			}
 		}
 

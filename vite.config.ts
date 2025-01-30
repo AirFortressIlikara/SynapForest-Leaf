@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 21:02:23
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-27 22:04:01
+ * @LastEditTime: 2025-01-30 16:10:34
  * @FilePath: /SynapForest/vite.config.ts
  * @Description: 
  * 
@@ -19,8 +19,6 @@
 import { paraglide } from '@inlang/paraglide-sveltekit/vite';
 import { defineConfig } from 'vitest/config';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { serverAddress, token } from './src/components/stores';
-import { get } from 'svelte/store';
 
 export default defineConfig({
 	plugins: [
@@ -30,19 +28,6 @@ export default defineConfig({
 			outdir: './src/lib/paraglide'
 		})
 	],
-	// server: {
-	// 	host: '0.0.0.0',
-	// 	proxy: {
-	// 		'raw_files': {
-	// 			target: get(serverAddress),
-	// 			changeOrigin: true,
-	// 			secure: false,
-	// 			headers: {
-	// 				Authorization: get(token),
-	// 			},
-	// 		},
-	// 	}
-	// },
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	}

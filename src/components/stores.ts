@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-27 16:23:27
+ * @LastEditTime: 2025-01-30 16:27:07
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -19,6 +19,8 @@
 import { derived, writable } from 'svelte/store';
 import type { Folder, Item, Tag } from './type';
 import { fetchItems } from './api';
+
+export const isDeleted = writable<boolean>(false);
 
 export const itemsPerRow = writable<number>(3);
 
@@ -63,11 +65,11 @@ export const sortedIds = derived(
 export const itemTrigger = writable<boolean>(false);
 
 const fetchedItems = derived(
-    [selectedFolderIDs, itemTrigger],
-    ([$selectedFolderIDs, $itemTrigger], set) => {
+    [selectedFolderIDs, itemTrigger, isDeleted],
+    ([$selectedFolderIDs, $itemTrigger, $isDeleted], set) => {
         const folderIds = Object.keys($selectedFolderIDs);
 
-        fetchItems({ folder_ids: folderIds })
+        fetchItems({ folder_ids: folderIds, is_deleted: $isDeleted })
             .then((data) => {
                 set(data);
             })

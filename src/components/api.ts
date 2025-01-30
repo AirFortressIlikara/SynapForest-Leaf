@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-29 21:09:36
+ * @LastEditTime: 2025-01-30 16:08:39
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -43,7 +43,7 @@ export const delItems = async (params = {}) => {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to fetch folders');
+            throw new Error('Failed to move items to trash');
         }
 
         const result = await response.json();
@@ -54,8 +54,8 @@ export const delItems = async (params = {}) => {
 
         return;
     } catch (error) {
-        console.error('Error fetching folders:', error);
-        return;
+        console.error('Error moving items to trash:', error);
+        throw error;
     }
 }
 

@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:51:16
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 11:49:42
+  LastEditTime: 2025-01-30 16:28:42
   FilePath: /SynapForest/src/components/Toolbar.svelte
   Description: 
   
@@ -18,13 +18,17 @@
 -->
 <script>
 	import Slider from './Slider.svelte';
-	import { itemsPerRow } from './stores';
+	import { isDeleted, itemsPerRow } from './stores';
 </script>
 
 <div class="toolbar">
 	<div class="slider">
 		<Slider bind:value={$itemsPerRow} min={1} max={7} />
 	</div>
+	<label class="checkbox">
+		<input type="checkbox" bind:checked={$isDeleted} />
+		回收站
+	</label>
 </div>
 
 <style>
@@ -40,5 +44,9 @@
 	.slider {
 		width: 20vh;
 		max-width: 40%;
+	}
+	.checkbox {
+		margin-left: 20px;
+		color: black; /* 为了在白色背景上显示文字 */
 	}
 </style>

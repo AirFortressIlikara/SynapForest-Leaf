@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-30 14:50:22
+  LastEditTime: 2025-01-30 18:00:41
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -19,6 +19,7 @@
 <script lang="ts">
 	import ItemRow from './ItemRow.svelte';
 	import {
+		isDeleted,
 		itemsPerRow,
 		itemTrigger,
 		selectedFolderIDs,
@@ -101,13 +102,13 @@
 			} else if (event.key === 'Delete') {
 				event.preventDefault();
 				try {
-					delItems({ item_ids: Object.keys($selectedItemIDs) });
+					delItems({ item_ids: Object.keys($selectedItemIDs), hard_delete: $isDeleted });
 				} catch (error) {
 					console.error('Error deleting files:', error);
 				} finally {
 					console.log('Deleted items:', Object.keys($selectedItemIDs));
 					$selectedItemIDs = {};
-					itemTrigger.set(!$itemTrigger);
+					setTimeout(() => itemTrigger.set(!$itemTrigger), 10);
 				}
 			} else if (event.key === 'Enter') {
 			}
