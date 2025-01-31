@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-21 15:53:18
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-30 16:08:39
+ * @LastEditTime: 2025-01-31 18:43:12
  * @FilePath: /SynapForest/src/components/api.ts
  * @Description: 
  * 
@@ -19,6 +19,39 @@
 import { get } from 'svelte/store';
 import { serverAddress, token } from './stores';
 import type { Folder, Item } from './type';
+
+export const addFolderForItems = async (params = {}) => {
+    try {
+        const address = get(serverAddress);
+        const authToken = get(token);
+
+        if (!address || !authToken) {
+            throw new Error('Server address or token is missing');
+        }
+
+        const body = JSON.stringify({
+            ...params,
+        });
+        const response = await fetch(`${address}/api/item/add-folder`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
+            },
+            body: body
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to add folder associations');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error adding folder associations:', error);
+        throw error;
+    }
+}
 
 export const delItems = async (params = {}) => {
     try {

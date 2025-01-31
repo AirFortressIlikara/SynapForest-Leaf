@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-31 17:41:16
+  LastEditTime: 2025-01-31 20:52:06
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -19,7 +19,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { folders, itemTrigger, selectedFolderIDs, selectedItemIDs } from './stores';
-	import { fetchFolders, uploadFiles } from './api';
+	import { addFolderForItems, fetchFolders, uploadFiles } from './api';
 	import type { Folder } from './type';
 
 	let isLoading = false;
@@ -87,19 +87,32 @@
 		if (event.dataTransfer?.types.includes('application/from_item')) {
 			const internalData = event.dataTransfer.getData('application/from_item');
 			const item = JSON.parse(internalData);
-			console.log('Item to Folder Detected: ', item, 'Items to drag: ', Object.keys($selectedItemIDs));
-			// todo...
-			// addFolderForItems({
-			// 	itemIDs: Object.keys(itemSelection),
-			// 	folderID: node_id
-			// });
+			console.log(
+				'Item to Folder Detected: ',
+				item,
+				'Items to drag: ',
+				Object.keys($selectedItemIDs)
+			);
+			try {
+				addFolderForItems({
+					item_ids: Object.keys($selectedItemIDs),
+					folder_id: folderId
+				});
+			} catch (error) {
+				console.error('Error addFolderForItems:', error);
+			} finally {
+			}
 		} else if (event.dataTransfer?.types.includes('application/from_folder')) {
 			const internalData = event.dataTransfer.getData('application/from_folder');
 			const item = JSON.parse(internalData);
-			console.log('Folder to Folder Detected:', item, 'Folders to drag: ', Object.keys($selectedFolderIDs));
+			console.log(
+				'Folder to Folder Detected:',
+				item,
+				'Folders to drag: ',
+				Object.keys($selectedFolderIDs)
+			);
 			// todo...
-		} else 
-		if (event.dataTransfer?.types.includes('Files')) {
+		} else if (event.dataTransfer?.types.includes('Files')) {
 			const files = event.dataTransfer?.files;
 			if (files && files.length > 0) {
 				console.log('Files to Folder Detected: ', files.length, 'files');
