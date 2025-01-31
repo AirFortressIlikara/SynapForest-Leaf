@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-30 18:00:41
+  LastEditTime: 2025-01-31 17:38:08
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -60,7 +60,9 @@
 
 	function handleDragOver(event: DragEvent) {
 		event.preventDefault();
-		isDragging = true;
+		if (event.dataTransfer?.types.includes('Files')) {
+			isDragging = true;
+		}
 	}
 
 	function handleDragLeave(event: DragEvent) {
@@ -72,15 +74,19 @@
 		event.preventDefault();
 		isDragging = false;
 
-		const files = event.dataTransfer?.files;
-		if (files && files.length > 0) {
-			try {
-				const result = await uploadFiles(Array.from(files), Object.keys($selectedFolderIDs));
-				console.log('Upload result:', result);
-			} catch (error) {
-				console.error('Error uploading files:', error);
-			} finally {
-				itemTrigger.set(!$itemTrigger);
+		console.log('Drag drop detected:', event.dataTransfer?.types);
+		if (event.dataTransfer?.types.includes('Files')) {
+			const files = event.dataTransfer?.files;
+			if (files && files.length > 0) {
+				console.log('Files to main window Detected: ', files.length, 'files');
+				try {
+					const result = await uploadFiles(Array.from(files), Object.keys($selectedFolderIDs));
+					console.log('Upload result:', result);
+				} catch (error) {
+					console.error('Error uploading files:', error);
+				} finally {
+					itemTrigger.set(!$itemTrigger);
+				}
 			}
 		}
 	}

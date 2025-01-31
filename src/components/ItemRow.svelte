@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-27 21:51:23
+  LastEditTime: 2025-01-31 17:16:56
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -59,6 +59,10 @@
 		});
 		console.log('Selected items:', Object.keys($selectedItemIDs));
 	}
+
+	function handleDragStart(event: DragEvent, item: any) {
+		event.dataTransfer?.setData('application/from_item', JSON.stringify(item));
+	}
 </script>
 
 <div class="image-row" style="height: {rowHeight + 60}px;">
@@ -72,6 +76,10 @@
 			on:click={(event) => {
 				event.stopPropagation();
 				handleItemClick(event, itemID);
+			}}
+			on:dragstart={(event) => {
+				handleItemClick(event, itemID);
+				handleDragStart(event, { id: 1, name: 'Internal Item' });
 			}}
 		>
 			<img

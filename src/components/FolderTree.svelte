@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-24 14:58:39
+  LastEditTime: 2025-01-31 17:41:16
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -18,8 +18,8 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { folders, selectedFolderIDs } from './stores';
-	import { fetchFolders } from './api';
+	import { folders, itemTrigger, selectedFolderIDs, selectedItemIDs } from './stores';
+	import { fetchFolders, uploadFiles } from './api';
 	import type { Folder } from './type';
 
 	let isLoading = false;
@@ -71,6 +71,49 @@
 		});
 		console.log('Selected folders:', Object.keys($selectedFolderIDs));
 	}
+
+	function handleDragStart(event: DragEvent, item: any) {
+		event.dataTransfer?.setData('application/from_folder', JSON.stringify(item));
+	}
+
+	function handleDragOver(event: DragEvent) {
+		event.preventDefault();
+	}
+
+	async function handleDrop(event: DragEvent) {
+		event.preventDefault();
+
+		console.log('Drag drop detected:', event.dataTransfer?.types);
+		if (event.dataTransfer?.types.includes('application/from_item')) {
+			const internalData = event.dataTransfer.getData('application/from_item');
+			const item = JSON.parse(internalData);
+			console.log('Item to Folder Detected: ', item, 'Items to drag: ', Object.keys($selectedItemIDs));
+			// todo...
+			// addFolderForItems({
+			// 	itemIDs: Object.keys(itemSelection),
+			// 	folderID: node_id
+			// });
+		} else if (event.dataTransfer?.types.includes('application/from_folder')) {
+			const internalData = event.dataTransfer.getData('application/from_folder');
+			const item = JSON.parse(internalData);
+			console.log('Folder to Folder Detected:', item, 'Folders to drag: ', Object.keys($selectedFolderIDs));
+			// todo...
+		} else 
+		if (event.dataTransfer?.types.includes('Files')) {
+			const files = event.dataTransfer?.files;
+			if (files && files.length > 0) {
+				console.log('Files to Folder Detected: ', files.length, 'files');
+				try {
+					const result = await uploadFiles(Array.from(files), [folderId]);
+					console.log('Upload result:', result);
+				} catch (error) {
+					console.error('Error uploading files:', error);
+				} finally {
+					itemTrigger.set(!$itemTrigger);
+				}
+			}
+		}
+	}
 </script>
 
 {#if isLoading}
@@ -87,6 +130,13 @@
 				event.stopPropagation();
 				handleFolderClick(event, folder.id);
 			}}
+			on:dragstart={(event) => {
+				handleFolderClick(event, folder.id);
+				handleDragStart(event, { id: 1, name: 'Internal Item' });
+			}}
+			on:dragover={handleDragOver}
+			on:drop={handleDrop}
+			draggable="true"
 		>
 			<button
 				type="button"
