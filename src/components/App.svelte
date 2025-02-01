@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-25 17:40:52
+  LastEditTime: 2025-02-01 19:14:03
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -16,12 +16,29 @@
   MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
   See the Mulan PubL v2 for more details.
 -->
-<script>
+<script lang="ts">
 	import ResizableSidebar from './ResizableSidebar.svelte';
 	import Toolbar from './Toolbar.svelte';
 	import MainContent from './MainContent.svelte';
 	import Leftbar from './Leftbar.svelte';
 	import RightBar from './RightBar.svelte';
+	import { browser } from '$app/environment';
+	import { onDestroy, onMount } from 'svelte';
+
+	async function handleKeyDown(event: KeyboardEvent) {
+		if (event.ctrlKey && event.key === 'a') {
+			event.preventDefault();
+		}
+	}
+	if (browser) {
+		onMount(() => {
+			document.addEventListener('keydown', handleKeyDown);
+		});
+
+		onDestroy(() => {
+			document.removeEventListener('keydown', handleKeyDown);
+		});
+	}
 </script>
 
 <div class="app">

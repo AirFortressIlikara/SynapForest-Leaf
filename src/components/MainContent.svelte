@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-31 17:38:08
+  LastEditTime: 2025-02-01 18:15:41
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -27,10 +27,17 @@
 		sortedIds
 	} from './stores';
 	import { browser } from '$app/environment';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { delItems, uploadFiles } from './api';
 
 	let isLoading = false;
+
+	let elementWidth: number = 0;
+
+	let imageGridElement: HTMLElement;
+	let isFocused = false;
+
+	let isDragging = false;
 
 	function chunkArray(array: string[], size: number) {
 		return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
@@ -38,8 +45,6 @@
 		);
 	}
 	$: groupedItems = chunkArray($sortedIds, $itemsPerRow);
-
-	let elementWidth: number = 0;
 
 	function measureWidth(node: HTMLElement) {
 		const observer = new ResizeObserver((entries) => {
@@ -55,8 +60,6 @@
 			}
 		};
 	}
-
-	let isDragging = false;
 
 	function handleDragOver(event: DragEvent) {
 		event.preventDefault();
@@ -91,36 +94,38 @@
 		}
 	}
 
-	if (browser) {
-		async function handleKeyDown(event: KeyboardEvent) {
-			if (event.ctrlKey && event.key === 'a') {
-				event.preventDefault();
-				selectedItemIDs.update(() =>
-					$sortedIds.reduce(
-						(acc, itemId) => {
-							acc[itemId] = true;
-							return acc;
-						},
-						{} as Record<string, boolean>
-					)
-				);
-				console.log('Selected items:', Object.keys($selectedItemIDs));
-			} else if (event.key === 'Delete') {
-				event.preventDefault();
-				try {
-					delItems({ item_ids: Object.keys($selectedItemIDs), hard_delete: $isDeleted });
-				} catch (error) {
-					console.error('Error deleting files:', error);
-				} finally {
-					console.log('Deleted items:', Object.keys($selectedItemIDs));
-					$selectedItemIDs = {};
-					setTimeout(() => itemTrigger.set(!$itemTrigger), 10);
-				}
-			} else if (event.key === 'Enter') {
+	async function handleKeyDown(event: KeyboardEvent) {
+		if (isFocused && event.ctrlKey && event.key === 'a') {
+			event.preventDefault();
+			selectedItemIDs.update(() =>
+				$sortedIds.reduce(
+					(acc, itemId) => {
+						acc[itemId] = true;
+						return acc;
+					},
+					{} as Record<string, boolean>
+				)
+			);
+			console.log('Selected items:', Object.keys($selectedItemIDs));
+		} else if (event.key === 'Delete') {
+			event.preventDefault();
+			try {
+				delItems({ item_ids: Object.keys($selectedItemIDs), hard_delete: $isDeleted });
+			} catch (error) {
+				console.error('Error deleting files:', error);
+			} finally {
+				console.log('Deleted items:', Object.keys($selectedItemIDs));
+				$selectedItemIDs = {};
+				setTimeout(() => itemTrigger.set(!$itemTrigger), 10);
 			}
+		} else if (event.key === 'Enter') {
+			event.preventDefault();
 		}
-
-		document.addEventListener('keydown', handleKeyDown);
+	}
+	if (browser) {
+		onMount(() => {
+			document.addEventListener('keydown', handleKeyDown);
+		});
 
 		onDestroy(() => {
 			document.removeEventListener('keydown', handleKeyDown);
@@ -131,7 +136,9 @@
 <div class="container" use:measureWidth>
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div
+		bind:this={imageGridElement}
 		class="image-grid"
 		on:click={(event) => {
 			event.stopPropagation();
@@ -141,7 +148,10 @@
 		on:dragover={handleDragOver}
 		on:dragleave={handleDragLeave}
 		on:drop={handleDrop}
+		on:focus={() => (isFocused = true)}
+		on:blur={() => (isFocused = false)}
 		class:is-dragging={isDragging}
+		tabindex="0"
 	>
 		{#each groupedItems as rowItemIDs}
 			<ItemRow {rowItemIDs} {elementWidth} />
