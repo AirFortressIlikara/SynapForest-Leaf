@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-31 20:52:06
+  LastEditTime: 2025-02-01 19:58:10
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -18,7 +18,7 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { folders, itemTrigger, selectedFolderIDs, selectedItemIDs } from './stores';
+	import { folders, itemTrigger, menuType, menuX, menuY, selectedFolderIDs, selectedItemIDs, showMenu } from './stores';
 	import { addFolderForItems, fetchFolders, uploadFiles } from './api';
 	import type { Folder } from './type';
 
@@ -150,6 +150,14 @@
 			on:dragover={handleDragOver}
 			on:drop={handleDrop}
 			draggable="true"
+			on:contextmenu={(event) => {
+				event.stopPropagation();
+				event.preventDefault();
+				menuX.set(event.clientX);
+				menuY.set(event.clientY);
+				menuType.set('Folder');
+				showMenu.set(true);
+			}}
 		>
 			<button
 				type="button"

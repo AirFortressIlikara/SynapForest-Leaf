@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-01-30 16:27:07
+ * @LastEditTime: 2025-02-01 19:55:33
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -90,3 +90,8 @@ fetchedItems.subscribe((value) => {
     items.set(itemsRecord);
     console.log('Update Items:', itemsRecord);
 });
+
+export const menuX = writable<number>(0);
+export const menuY = writable<number>(0);
+export const showMenu = writable<boolean>(false);
+export const menuType = writable<string>("");
