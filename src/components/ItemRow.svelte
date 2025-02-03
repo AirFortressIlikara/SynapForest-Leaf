@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-01 19:57:37
+  LastEditTime: 2025-02-03 13:06:12
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -18,8 +18,7 @@
 -->
 <script lang="ts">
 	import { get } from 'svelte/store';
-	import { items, menuType, menuX, menuY, showMenu } from './stores';
-	import { selectedItemIDs } from './stores';
+	import { items, menuType, menuX, menuY, showMenu, selectedItemIDs } from './stores';
 	import AuthImg from './AuthImg.svelte';
 
 	export let rowItemIDs: string[];

@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-01-26 15:51:06
+  LastEditTime: 2025-02-03 13:07:38
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -17,7 +17,7 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { folders, items, selectedFolderIDs, selectedItemIDs } from './stores';
+	import { folders, items, selectedItemIDs } from './stores';
 	import * as m from '$lib/paraglide/messages.js';
 
 	$: selectItemCount = Object.keys($selectedItemIDs).length;

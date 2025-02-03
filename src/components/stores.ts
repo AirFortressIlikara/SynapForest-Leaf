@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-01 19:55:33
+ * @LastEditTime: 2025-02-03 13:06:33
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -18,7 +18,7 @@
  */
 import { derived, writable } from 'svelte/store';
 import type { Folder, Item, Tag } from './type';
-import { fetchItems } from './api';
+import { fetchItems } from './api/index';
 
 export const isDeleted = writable<boolean>(false);
 

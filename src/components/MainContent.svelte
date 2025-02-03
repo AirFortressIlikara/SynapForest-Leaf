@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-01 18:15:41
+  LastEditTime: 2025-02-03 13:07:23
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -28,7 +28,7 @@
 	} from './stores';
 	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
-	import { delItems, uploadFiles } from './api';
+	import { delItems, uploadFiles } from './api/index';
 
 	let isLoading = false;
 
