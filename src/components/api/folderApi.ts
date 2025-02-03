@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 13:02:17
+ * @LastEditTime: 2025-02-03 13:42:03
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -33,6 +33,40 @@ export const addFolderForItems = async (params = {}) => {
             ...params,
         });
         const response = await fetch(`${address}/api/item/add-folder`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
+            },
+            body: body
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to add folder associations');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error adding folder associations:', error);
+        throw error;
+    }
+}
+
+export const updateFoldersParent = async (folderIds: string[], newParent: string) => {
+    try {
+        const address = get(serverAddress);
+        const authToken = get(token);
+
+        if (!address || !authToken) {
+            throw new Error('Server address or token is missing');
+        }
+
+        const body = JSON.stringify({
+            folderIds: folderIds,
+            newParent: newParent,
+        });
+        const response = await fetch(`${address}/api/folder/updateParent/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
