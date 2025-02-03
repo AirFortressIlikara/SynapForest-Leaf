@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-01 19:21:29
+  LastEditTime: 2025-02-03 16:18:07
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -70,7 +70,7 @@
 	on:blur={() => (isFocused = false)}
 	tabindex="0"
 >
-	<FolderTree folderId={'00000000-0000-0000-0000-000000000000'} />
+	<FolderTree folderId={'00000000-0000-0000-0000-000000000000'} level={0} />
 </div>
 
 <style>

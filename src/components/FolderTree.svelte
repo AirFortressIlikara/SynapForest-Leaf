@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 13:06:55
+  LastEditTime: 2025-02-03 16:24:24
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -18,7 +18,16 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { folders, itemTrigger, menuType, menuX, menuY, selectedFolderIDs, selectedItemIDs, showMenu } from './stores';
+	import {
+		folders,
+		itemTrigger,
+		menuType,
+		menuX,
+		menuY,
+		selectedFolderIDs,
+		selectedItemIDs,
+		showMenu
+	} from './stores';
 	import { addFolderForItems, fetchFolders, uploadFiles } from './api/index';
 	import type { Folder } from './type';
 
@@ -29,7 +38,7 @@
 	export let level: number = 0;
 
 	$: folder = $folders[folderId];
-	$: subFolderIDs = folder?.sub_folders ?? [];
+	$: subFolderIDs = folder?.subFolders ?? [];
 
 	console.log('Rendering folder id: ', folderId);
 
@@ -94,10 +103,7 @@
 				Object.keys($selectedItemIDs)
 			);
 			try {
-				addFolderForItems({
-					item_ids: Object.keys($selectedItemIDs),
-					folder_id: folderId
-				});
+				addFolderForItems({ itemIds: Object.keys($selectedItemIDs), folderId });
 			} catch (error) {
 				console.error('Error addFolderForItems:', error);
 			} finally {
@@ -117,7 +123,7 @@
 			if (files && files.length > 0) {
 				console.log('Files to Folder Detected: ', files.length, 'files');
 				try {
-					const result = await uploadFiles(Array.from(files), [folderId]);
+					const result = await uploadFiles({ files: Array.from(files), folderIds: [folderId] });
 					console.log('Upload result:', result);
 				} catch (error) {
 					console.error('Error uploading files:', error);

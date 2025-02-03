@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:01:07
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 13:04:16
+ * @LastEditTime: 2025-02-03 15:57:43
  * @FilePath: /SynapForest/src/components/api/itemApi.ts
  * @Description: 
  * 
@@ -20,7 +20,19 @@ import { get } from 'svelte/store';
 import { serverAddress, token } from '../stores';
 import type { Item } from '../type';
 
-export const delItems = async (params = {}) => {
+/**
+ * 将指定项目移动到回收站或永久删除
+ * @param itemIDs 需要删除的项目ID数组
+ * @param hardDelete 是否永久删除（true 为永久删除，false 为移动到回收站）
+ * @throws 如果请求失败或服务器返回错误，抛出异常
+ */
+export const delItems = async ({
+    itemIds,
+    hardDelete
+}: {
+    itemIds: string[];
+    hardDelete: boolean;
+}) => {
     try {
         const address = get(serverAddress);
         const authToken = get(token);
@@ -30,7 +42,8 @@ export const delItems = async (params = {}) => {
         }
 
         const body = JSON.stringify({
-            ...params,
+            itemIds,
+            hardDelete,
         });
 
         const response = await fetch(`${address}/api/item/moveToTrash`, {
@@ -57,14 +70,39 @@ export const delItems = async (params = {}) => {
         console.error('Error moving items to trash:', error);
         throw error;
     }
-}
+};
 
 /**
  * 从后端获取项目数据
- * @param params 请求参数
+ * @param limit 每页显示的项目数量
+ * @param offset 分页偏移量
+ * @param orderBy 排序字段
+ * @param exts 文件扩展名过滤
+ * @param keyword 关键字搜索
+ * @param tagIds 标签ID过滤
+ * @param folderIds 文件夹ID过滤
+ * @param isDeleted 是否显示已删除的项目
  * @returns 项目列表
  */
-export const fetchItems = async (params = {}) => {
+export const fetchItems = async ({
+    limit,
+    offset,
+    orderBy,
+    exts,
+    keyword,
+    tagIds,
+    folderIds,
+    isDeleted
+}: {
+    limit?: number;
+    offset?: number;
+    orderBy?: string;
+    exts?: string[];
+    keyword?: string;
+    tagIds?: string[];
+    folderIds?: string[];
+    isDeleted?: boolean;
+} = {}) => {
     try {
         const address = get(serverAddress);
         const authToken = get(token);
@@ -74,7 +112,14 @@ export const fetchItems = async (params = {}) => {
         }
 
         const body = JSON.stringify({
-            ...params,
+            limit,
+            offset,
+            orderBy,
+            exts,
+            keyword,
+            tagIds,
+            folderIds,
+            isDeleted,
         });
 
         const response = await fetch(`${address}/api/item/list`, {
@@ -96,34 +141,37 @@ export const fetchItems = async (params = {}) => {
             throw new Error(result.message || 'Unknown error occurred');
         }
 
-        const items: Item[] = result.data?.map((item: Item) => ({
-            id: item.id,
-            created_at: item.created_at,
-            imported_at: item.imported_at,
-            modified_at: item.modified_at,
-            deleted_at: item.deleted_at,
+        const items: Item[] = result.data?.map((item: Item) => {
+            const formattedItem: Item = {
+                id: item.id,
+                createdAt: item.createdAt,
+                importedAt: item.importedAt,
+                modifiedAt: item.modifiedAt,
+                deletedAt: item.deletedAt,
 
-            name: item.name,
-            ext: item.ext,
+                name: item.name,
+                ext: item.ext,
 
-            width: item.width,
-            height: item.height,
-            size: item.size,
+                width: item.width,
+                height: item.height,
+                size: item.size,
 
-            url: item.url,
-            annotation: item.annotation,
+                url: item.url,
+                annotation: item.annotation,
 
-            tag_ids: item.tag_ids ? item.tag_ids : [],
-            folder_ids: item.folder_ids ? item.folder_ids : [],
-            star: item.star,
+                tagIds: item.tagIds ? (item.tagIds) : [],
+                folderIds: item.folderIds ? (item.folderIds) : [],
+                star: item.star,
 
-            have_thumbnail: item.have_thumbnail,
-            have_preview: item.have_preview,
+                haveThumbnail: item.haveThumbnail,
+                havePreview: item.havePreview,
 
-            preview_url: item.ext == "gif" ? `${address}/public/raw_files/${item.id}` : item.have_thumbnail ? `${address}/public/previews/${item.id}` : '',
-            thumbnail_url: item.ext == "gif" ? `${address}/public/raw_files/${item.id}` : item.have_thumbnail ? `${address}/public/thumbnails/${item.id}` : '',
-            raw_url: `${address}/public/raw_files/${item.id}`,
-        })) || []
+                previewUrl: item.ext == "gif" ? `${address}/public/raw_files/${item.id}` : item.havePreview ? `${address}/public/previews/${item.id}` : '',
+                thumbnailUrl: item.ext == "gif" ? `${address}/public/raw_files/${item.id}` : item.haveThumbnail ? `${address}/public/thumbnails/${item.id}` : '',
+                rawUrl: `${address}/public/raw_files/${item.id}`,
+            };
+            return formattedItem;
+        }) || [];
 
         console.log('Fetched items:', items);
 

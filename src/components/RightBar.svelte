@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 13:07:38
+  LastEditTime: 2025-02-03 16:17:24
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -46,7 +46,7 @@
 		const selectedKeys = Object.keys($selectedItemIDs);
 		if (selectedKeys.length === 0) return [];
 
-		const allTagIDs = selectedKeys.map((key) => $items[key].tag_ids);
+		const allTagIDs = selectedKeys.map((key) => $items[key].tagIds);
 
 		return allTagIDs.reduce((acc, tagIDs) => {
 			return acc.filter((id) => tagIDs.includes(id));
@@ -57,7 +57,7 @@
 		const selectedKeys = Object.keys($selectedItemIDs);
 		if (selectedKeys.length === 0) return [];
 
-		const allFolderIDs = selectedKeys.map((key) => $items[key].folder_ids);
+		const allFolderIDs = selectedKeys.map((key) => $items[key].folderIds);
 
 		return allFolderIDs.reduce((acc, folderIDs) => {
 			return acc.filter((id) => folderIDs.includes(id));
@@ -67,7 +67,7 @@
 
 <div class="rightbar">
 	{#if selectItemCount >= 1}
-		<img src={firstSelectedItem.raw_url} alt="Thumbnail" />
+		<img src={firstSelectedItem.rawUrl} alt="Thumbnail" />
 		{#if selectItemCount > 1}
 			<div>{m.selected_count({ count: selectItemCount })}</div>
 		{/if}
@@ -110,9 +110,9 @@
 				<div><strong>Dimensions:</strong></div>
 				<div>{firstSelectedItem.width}x{firstSelectedItem.height}</div>
 				<div><strong>Created:</strong></div>
-				<div>{firstSelectedItem.created_at}</div>
+				<div>{firstSelectedItem.createdAt}</div>
 				<div><strong>Modified:</strong></div>
-				<div>{firstSelectedItem.modified_at}</div>
+				<div>{firstSelectedItem.modifiedAt}</div>
 			{/if}
 		</div>
 	</div>

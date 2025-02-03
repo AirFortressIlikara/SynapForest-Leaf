@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 13:42:03
+ * @LastEditTime: 2025-02-03 16:10:57
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -20,7 +20,19 @@ import { get } from 'svelte/store';
 import { serverAddress, token } from '../stores';
 import type { Folder } from '../type';
 
-export const addFolderForItems = async (params = {}) => {
+/**
+ * 为指定项目添加文件夹关联
+ * @param itemIds 需要关联文件夹的项目ID数组
+ * @param folderId 目标文件夹ID
+ * @throws 如果请求失败或服务器返回错误，抛出异常
+ */
+export const addFolderForItems = async ({
+    itemIds,
+    folderId
+}: {
+    itemIds: string[];
+    folderId: string;
+}) => {
     try {
         const address = get(serverAddress);
         const authToken = get(token);
@@ -30,15 +42,17 @@ export const addFolderForItems = async (params = {}) => {
         }
 
         const body = JSON.stringify({
-            ...params,
+            itemIds,
+            folderId,
         });
+
         const response = await fetch(`${address}/api/item/add-folder`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${authToken}`,
             },
-            body: body
+            body: body,
         });
 
         if (!response.ok) {
@@ -51,9 +65,21 @@ export const addFolderForItems = async (params = {}) => {
         console.error('Error adding folder associations:', error);
         throw error;
     }
-}
+};
 
-export const updateFoldersParent = async (folderIds: string[], newParent: string) => {
+/**
+ * 更新文件夹的父文件夹
+ * @param folderIds 需要更新的文件夹ID数组
+ * @param newParent 新的父文件夹ID
+ * @throws 如果请求失败或服务器返回错误，抛出异常
+ */
+export const updateFoldersParent = async ({
+    folderIds,
+    newParent
+}: {
+    folderIds: string[];
+    newParent: string;
+}) => {
     try {
         const address = get(serverAddress);
         const authToken = get(token);
@@ -63,36 +89,41 @@ export const updateFoldersParent = async (folderIds: string[], newParent: string
         }
 
         const body = JSON.stringify({
-            folderIds: folderIds,
-            newParent: newParent,
+            folderIds,
+            newParent,
         });
+
         const response = await fetch(`${address}/api/folder/updateParent/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `${authToken}`,
             },
-            body: body
+            body: body,
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.message || 'Failed to add folder associations');
+            throw new Error(errorData.message || 'Failed to update folder parent');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Error adding folder associations:', error);
+        console.error('Error updating folder parent:', error);
         throw error;
     }
-}
+};
 
 /**
  * 从后端获取文件夹数据
- * @param params 请求参数
+ * @param parent 父文件夹ID（可选，用于获取指定父文件夹下的子文件夹）
  * @returns 文件夹列表
  */
-export const fetchFolders = async (params = {}) => {
+export const fetchFolders = async ({
+    parent
+}: {
+    parent?: string;
+} = {}) => {
     try {
         const address = get(serverAddress);
         const authToken = get(token);
@@ -102,7 +133,7 @@ export const fetchFolders = async (params = {}) => {
         }
 
         const body = JSON.stringify({
-            ...params,
+            parent,
         });
 
         const response = await fetch(`${address}/api/folder/list`, {
@@ -130,8 +161,8 @@ export const fetchFolders = async (params = {}) => {
             description: folder.description,
             items: folder.items ? folder.items : [],
             parent: folder.parent,
-            sub_folders: folder.sub_folders ? folder.sub_folders : [],
-            modified_at: folder.modified_at,
+            subFolders: folder.subFolders ? folder.subFolders : [],
+            modifiedAt: folder.modifiedAt,
             tags: folder.tags ? folder.tags : [],
             isExpand: folder.isExpand,
         }));

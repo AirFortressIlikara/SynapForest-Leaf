@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:01:16
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 13:04:58
+ * @LastEditTime: 2025-02-03 16:23:37
  * @FilePath: /SynapForest/src/components/api/fileUploadApi.ts
  * @Description: 
  * 
@@ -22,20 +22,26 @@ import { serverAddress, token } from '../stores';
 /**
  * 上传文件到服务器
  * @param files 要上传的文件列表
- * @param folder_ids 文件所属的文件夹ID列表
+ * @param folderIds 文件所属的文件夹ID列表
  * @returns 上传结果
  */
-export const uploadFiles = async (files: File[], folder_ids: string[]) => {
+export const uploadFiles = async ({
+    files,
+    folderIds
+}: {
+    files: File[];
+    folderIds: string[];
+}) => {
     try {
         // 上传文件到服务器
-        const uploadResult = await uploadFilesToServer(files);
+        const uploadResult = await uploadFilesToServer({ files });
         console.log('Files uploaded:', uploadResult);
 
         // 将文件路径添加到数据库
-        const addPathsResult = await addFilesFromPaths(
-            files.map((file) => file.name),
-            folder_ids
-        );
+        const addPathsResult = await addFilesFromPaths({
+            fileNames: files.map((file) => file.name),
+            folderIds,
+        });
         console.log('Paths added to database:', addPathsResult);
 
         return { uploadResult, addPathsResult };
@@ -50,10 +56,14 @@ export const uploadFiles = async (files: File[], folder_ids: string[]) => {
  * @param files 要上传的文件列表
  * @returns 上传结果
  */
-const uploadFilesToServer = async (files: File[]) => {
+const uploadFilesToServer = async ({
+    files
+}: {
+    files: File[];
+}) => {
     const address = get(serverAddress);
     const authToken = get(token);
-    // todo: Auth
+
     if (!address || !authToken) {
         throw new Error('Server address or token is missing');
     }
@@ -79,10 +89,16 @@ const uploadFilesToServer = async (files: File[]) => {
 /**
  * 将文件路径添加到数据库的逻辑
  * @param fileNames 文件名列表
- * @param folder_ids 文件所属的文件夹ID列表
+ * @param folderIds 文件所属的文件夹ID列表
  * @returns 添加结果
  */
-const addFilesFromPaths = async (fileNames: string[], folder_ids: string[]) => {
+const addFilesFromPaths = async ({
+    fileNames,
+    folderIds
+}: {
+    fileNames: string[];
+    folderIds: string[];
+}) => {
     const address = get(serverAddress);
     const authToken = get(token);
 
@@ -97,8 +113,8 @@ const addFilesFromPaths = async (fileNames: string[], folder_ids: string[]) => {
             Authorization: `${authToken}`,
         },
         body: JSON.stringify({
-            file_names: fileNames,
-            folder_ids: folder_ids,
+            fileNames,
+            folderIds,
         }),
     });
 
