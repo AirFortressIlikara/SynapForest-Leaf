@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 13:06:12
+  LastEditTime: 2025-02-03 16:13:35
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -90,7 +90,7 @@
 			}}
 		>
 			<img
-				src={get(items)[itemID].raw_url}
+				src={get(items)[itemID].rawUrl}
 				alt={itemID}
 				style="height: {rowHeight}px; width:{(rowHeight * get(items)[itemID].width) /
 					get(items)[itemID].height}px;"
@@ -108,7 +108,7 @@
 			{/if}
 
 			<div class="image-date" style="color: #666; font-size: 0.9em;">
-				{get(items)[itemID].modified_at}
+				{get(items)[itemID].modifiedAt}
 			</div>
 		</div>
 	{/each}

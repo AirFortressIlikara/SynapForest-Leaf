@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 13:07:23
+  LastEditTime: 2025-02-03 16:24:01
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -83,7 +83,10 @@
 			if (files && files.length > 0) {
 				console.log('Files to main window Detected: ', files.length, 'files');
 				try {
-					const result = await uploadFiles(Array.from(files), Object.keys($selectedFolderIDs));
+					const result = await uploadFiles({
+						files: Array.from(files),
+						folderIds: Object.keys($selectedFolderIDs)
+					});
 					console.log('Upload result:', result);
 				} catch (error) {
 					console.error('Error uploading files:', error);
@@ -110,7 +113,7 @@
 		} else if (event.key === 'Delete') {
 			event.preventDefault();
 			try {
-				delItems({ item_ids: Object.keys($selectedItemIDs), hard_delete: $isDeleted });
+				delItems({ itemIds: Object.keys($selectedItemIDs), hardDelete: $isDeleted });
 			} catch (error) {
 				console.error('Error deleting files:', error);
 			} finally {

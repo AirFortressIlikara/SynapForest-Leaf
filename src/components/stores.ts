@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 13:06:33
+ * @LastEditTime: 2025-02-03 16:25:43
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -34,8 +34,8 @@ export const folders = writable<Record<string, Folder>>({
         description: "",
         items: [],
         parent: "",
-        sub_folders: [],
-        modified_at: new Date(),
+        subFolders: [],
+        modifiedAt: new Date(),
         tags: [],
         isExpand: true,
     }
@@ -69,7 +69,7 @@ const fetchedItems = derived(
     ([$selectedFolderIDs, $itemTrigger, $isDeleted], set) => {
         const folderIds = Object.keys($selectedFolderIDs);
 
-        fetchItems({ folder_ids: folderIds, is_deleted: $isDeleted })
+        fetchItems({ folderIds, isDeleted: $isDeleted })
             .then((data) => {
                 set(data);
             })
