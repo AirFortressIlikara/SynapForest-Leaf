@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 16:24:24
+  LastEditTime: 2025-02-04 16:46:33
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -150,7 +150,10 @@
 				handleFolderClick(event, folder.id);
 			}}
 			on:dragstart={(event) => {
-				handleFolderClick(event, folder.id);
+				if (!(folderId in $selectedFolderIDs)) {
+					handleFolderClick(event, folderId);
+				}
+				handleFolderClick(event, folderId);
 				handleDragStart(event, { id: 1, name: 'Internal Item' });
 			}}
 			on:dragover={handleDragOver}
