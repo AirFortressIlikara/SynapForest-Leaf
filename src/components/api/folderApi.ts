@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 16:10:57
+ * @LastEditTime: 2025-02-04 18:35:42
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from 'svelte/store';
-import { serverAddress, token } from '../stores';
+import { folders, serverAddress, token } from '../stores';
 import type { Folder } from '../type';
 
 /**
@@ -93,7 +93,7 @@ export const updateFoldersParent = async ({
             newParent,
         });
 
-        const response = await fetch(`${address}/api/folder/updateParent/`, {
+        const response = await fetch(`${address}/api/folder/updateParent`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -111,6 +111,28 @@ export const updateFoldersParent = async ({
     } catch (error) {
         console.error('Error updating folder parent:', error);
         throw error;
+    } finally {
+        folders.update(currentFolders => {
+            folderIds.forEach(id => {
+                const folder = currentFolders[id];
+                if (folder) {
+                    const oldParent = currentFolders[folder.parent];
+                    if (oldParent && oldParent.subFolders) {
+                        oldParent.subFolders = oldParent.subFolders.filter(subId => subId !== id);
+                    }
+
+                    folder.parent = newParent;
+
+                    if (newParent !== null && currentFolders[newParent]) {
+                        if (!currentFolders[newParent].subFolders) {
+                            currentFolders[newParent].subFolders = [];
+                        }
+                        currentFolders[newParent].subFolders.push(id);
+                    }
+                }
+            });
+            return currentFolders;
+        });
     }
 };
 
