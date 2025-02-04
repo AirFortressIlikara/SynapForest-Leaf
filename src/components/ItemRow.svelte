@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 16:13:35
+  LastEditTime: 2025-02-04 16:44:55
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -77,7 +77,9 @@
 				handleItemClick(event, itemID);
 			}}
 			on:dragstart={(event) => {
-				handleItemClick(event, itemID);
+				if (!(itemID in $selectedItemIDs)) {
+					handleItemClick(event, itemID);
+				}
 				handleDragStart(event, { id: 1, name: 'Internal Item' });
 			}}
 			on:contextmenu={(event) => {
