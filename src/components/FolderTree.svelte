@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 16:46:33
+  LastEditTime: 2025-02-04 18:36:35
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -17,7 +17,6 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import {
 		folders,
 		itemTrigger,
@@ -28,11 +27,7 @@
 		selectedItemIDs,
 		showMenu
 	} from './stores';
-	import { addFolderForItems, fetchFolders, uploadFiles } from './api/index';
-	import type { Folder } from './type';
-
-	let isLoading = false;
-	let error = '';
+	import { addFolderForItems, updateFoldersParent, uploadFiles } from './api/index';
 
 	export let folderId: string;
 	export let level: number = 0;
@@ -41,28 +36,6 @@
 	$: subFolderIDs = folder?.subFolders ?? [];
 
 	console.log('Rendering folder id: ', folderId);
-
-	onMount(async () => {
-		if (level === 0) {
-			isLoading = true;
-			try {
-				const fetchedFolders = await fetchFolders({});
-
-				const foldersMap: Record<string, Folder> = {};
-				fetchedFolders.forEach((folder) => {
-					foldersMap[folder.id] = folder;
-				});
-
-				console.log('FoldersMap:', foldersMap);
-
-				folders.set(foldersMap);
-			} catch (err) {
-				error = (err as Error).message;
-			} finally {
-				isLoading = false;
-			}
-		}
-	});
 
 	function handleFolderClick(event: MouseEvent, folderId: string) {
 		selectedFolderIDs.update(($selectedFolderIDs) => {
@@ -117,7 +90,7 @@
 				'Folders to drag: ',
 				Object.keys($selectedFolderIDs)
 			);
-			// todo...
+			updateFoldersParent({ folderIds: Object.keys($selectedFolderIDs), newParent: folderId });
 		} else if (event.dataTransfer?.types.includes('Files')) {
 			const files = event.dataTransfer?.files;
 			if (files && files.length > 0) {
@@ -135,11 +108,7 @@
 	}
 </script>
 
-{#if isLoading}
-	<p>Loading folders...</p>
-{:else if error}
-	<p style="color: red;">Error: {error}</p>
-{:else if level > 0}
+{#if level > 0}
 	<div class="folder">
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
