@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 16:44:55
+  LastEditTime: 2025-02-04 19:24:50
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -85,6 +85,9 @@
 			on:contextmenu={(event) => {
 				event.stopPropagation();
 				event.preventDefault();
+				if (!(itemID in $selectedItemIDs)) {
+					handleItemClick(event, itemID);
+				}
 				menuX.set(event.clientX);
 				menuY.set(event.clientY);
 				menuType.set('Item');

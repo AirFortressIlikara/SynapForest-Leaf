@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 16:24:01
+  LastEditTime: 2025-02-04 19:26:08
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -28,9 +28,8 @@
 	} from './stores';
 	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
-	import { delItems, uploadFiles } from './api/index';
-
-	let isLoading = false;
+	import { uploadFiles } from './api/index';
+	import { deleteSelectedItems } from './utils';
 
 	let elementWidth: number = 0;
 
@@ -112,15 +111,7 @@
 			console.log('Selected items:', Object.keys($selectedItemIDs));
 		} else if (event.key === 'Delete') {
 			event.preventDefault();
-			try {
-				delItems({ itemIds: Object.keys($selectedItemIDs), hardDelete: $isDeleted });
-			} catch (error) {
-				console.error('Error deleting files:', error);
-			} finally {
-				console.log('Deleted items:', Object.keys($selectedItemIDs));
-				$selectedItemIDs = {};
-				setTimeout(() => itemTrigger.set(!$itemTrigger), 10);
-			}
+			deleteSelectedItems({ itemIds: Object.keys($selectedItemIDs), hardDelete: $isDeleted });
 		} else if (event.key === 'Enter') {
 			event.preventDefault();
 		}

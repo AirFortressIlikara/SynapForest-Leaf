@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 18:36:35
+  LastEditTime: 2025-02-04 19:08:07
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -113,10 +113,10 @@
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
-			class="folder-name {folder.id in $selectedFolderIDs ? 'selected' : ''}"
+			class="folder-name {folderId in $selectedFolderIDs ? 'selected' : ''}"
 			on:click={(event) => {
 				event.stopPropagation();
-				handleFolderClick(event, folder.id);
+				handleFolderClick(event, folderId);
 			}}
 			on:dragstart={(event) => {
 				if (!(folderId in $selectedFolderIDs)) {
