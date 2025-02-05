@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 18:20:58
+  LastEditTime: 2025-02-05 21:27:58
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -23,28 +23,35 @@
 	import { browser } from '$app/environment';
 	import { fetchFolders } from './api';
 	import type { Folder } from './type';
+	import { deleteSelectedFolders } from './utils';
 
 	let isLoading = false;
 	let leftBarElement: HTMLElement;
 	let isFocused = false;
 
 	function handleSelectAll(event: KeyboardEvent) {
-		if (isFocused && event.ctrlKey && event.key === 'a') {
-			event.preventDefault();
-			selectedFolderIDs.update(() =>
-				Object.keys($folders).reduce(
-					(acc, folderID) => {
-						acc[folderID] = true;
-						return acc;
-					},
-					{} as Record<string, boolean>
-				)
-			);
-			console.log('Selected folders:', Object.keys($selectedFolderIDs));
-		} else if (event.key === 'Delete') {
-			event.preventDefault();
-		} else if (event.key === 'Enter') {
-			event.preventDefault();
+		if (isFocused) {
+			if (event.ctrlKey && event.key === 'a') {
+				event.preventDefault();
+				selectedFolderIDs.update(() =>
+					Object.keys($folders).reduce(
+						(acc, folderID) => {
+							acc[folderID] = true;
+							return acc;
+						},
+						{} as Record<string, boolean>
+					)
+				);
+				console.log('Selected folders:', Object.keys($selectedFolderIDs));
+			} else if (event.key === 'Delete') {
+				event.preventDefault();
+				deleteSelectedFolders({
+					folderId: Object.keys($selectedFolderIDs)[0],
+					deleteItems: false
+				});
+			} else if (event.key === 'Enter') {
+				event.preventDefault();
+			}
 		}
 	}
 
@@ -65,7 +72,7 @@
 			isLoading = false;
 		}
 	});
-	
+
 	$: console.log('Folders updated:', $folders);
 
 	if (browser) {

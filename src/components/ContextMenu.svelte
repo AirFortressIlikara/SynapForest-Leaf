@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 19:26:39
+  LastEditTime: 2025-02-05 21:22:54
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -18,12 +18,31 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { isDeleted, menuType, menuX, menuY, showMenu, selectedItemIDs } from './stores';
-	import { deleteSelectedItems } from './utils';
+	import {
+		isDeleted,
+		menuType,
+		menuX,
+		menuY,
+		showMenu,
+		selectedItemIDs,
+		selectedFolderIDs,
+		folders
+	} from './stores';
+	import { deleteSelectedFolders, deleteSelectedItems, updateFolderTree } from './utils';
+	import { delFolder } from './api';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
-			{ label: '删除', action: () => console.log('Delete clicked') },
+			{
+				label: '删除',
+				action: () => {
+					console.log('Delete clicked');
+					deleteSelectedFolders({
+						folderId: Object.keys($selectedFolderIDs)[0],
+						deleteItems: false
+					});
+				}
+			},
 			{ label: '展开', action: () => console.log('Open clicked') },
 			{ label: '移动至', action: () => console.log('MoveTo clicked') }
 		],
