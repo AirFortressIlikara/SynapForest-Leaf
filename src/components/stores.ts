@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 16:25:43
+ * @LastEditTime: 2025-02-06 20:21:51
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -19,6 +19,20 @@
 import { derived, writable } from 'svelte/store';
 import type { Folder, Item, Tag } from './type';
 import { fetchItems } from './api/index';
+
+export const folderIdToDelete = writable<string[]>([]);
+
+// 定义模态框的类型
+type ModalComponent = ConstructorOfATypedSvelteComponent | null;
+
+// 定义模态框的 props 类型
+interface ModalProps {
+    [key: string]: any;
+}
+
+// 创建 store
+export const currentModal = writable<ModalComponent>(null);
+export const modalProps = writable<ModalProps>({});
 
 export const isDeleted = writable<boolean>(false);
 

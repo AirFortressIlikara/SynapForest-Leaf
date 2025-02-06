@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-05 21:22:54
+  LastEditTime: 2025-02-06 21:08:24
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -25,11 +25,9 @@
 		menuY,
 		showMenu,
 		selectedItemIDs,
-		selectedFolderIDs,
-		folders
+		selectedFolderIDs
 	} from './stores';
-	import { deleteSelectedFolders, deleteSelectedItems, updateFolderTree } from './utils';
-	import { delFolder } from './api';
+	import { deleteSelectedFolders, deleteSelectedItems, showDeleteConfirmationModal } from './utils';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
@@ -37,10 +35,7 @@
 				label: '删除',
 				action: () => {
 					console.log('Delete clicked');
-					deleteSelectedFolders({
-						folderId: Object.keys($selectedFolderIDs)[0],
-						deleteItems: false
-					});
+					showDeleteConfirmationModal();
 				}
 			},
 			{ label: '展开', action: () => console.log('Open clicked') },

@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-19 21:38:54
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-02 12:19:45
+  LastEditTime: 2025-02-06 21:13:42
   FilePath: /SynapForest/src/components/App.svelte
   Description: 
   
@@ -24,8 +24,10 @@
 	import RightBar from './RightBar.svelte';
 	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
-	import { showMenu } from './stores';
+	import { showMenu, modalProps, currentModal } from './stores';
 	import ContextMenu from './ContextMenu.svelte';
+	import ModalContainer from './modal/ModalContainer.svelte';
+	import { closeModal } from './utils';
 
 	async function handleKeyDown(event: KeyboardEvent) {
 		if (event.ctrlKey && event.key === 'a') {
@@ -64,6 +66,8 @@
 	{#if $showMenu}
 		<ContextMenu />
 	{/if}
+
+	<ModalContainer />
 </div>
 
 <style>

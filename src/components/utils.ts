@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-04 19:13:07
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-05 21:22:10
+ * @LastEditTime: 2025-02-06 21:15:55
  * @FilePath: /SynapForest/src/components/utils.ts
  * @Description: 
  * 
@@ -17,9 +17,10 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from "svelte/store";
-import { folders, itemTrigger, selectedFolderIDs, selectedItemIDs } from "./stores";
+import { currentModal, folderIdToDelete, folders, itemTrigger, modalProps, selectedFolderIDs, selectedItemIDs } from "./stores";
 import { delFolder, delItems, fetchFolders } from "./api";
 import type { Folder } from "./type";
+import FolderDeleteConfirmModal from "./modal/FolderDeleteConfirmModal.svelte";
 
 /**
  * 删除选定的项目
@@ -45,6 +46,28 @@ export const deleteSelectedItems = async ({
     }
 };
 
+// 显示删除确认模态框
+export function showDeleteConfirmationModal() {
+    console.log('showDeleteConfirmationModal')
+    currentModal.set(FolderDeleteConfirmModal);
+    modalProps.set({
+        onConfirm: (deleteItems: boolean) => {
+            deleteSelectedFolders({
+                folderId: Object.keys(get(selectedFolderIDs))[0],
+                deleteItems
+            });
+            closeModal();
+        }, // 传递确认回调
+        onClose: closeModal,   // 传递关闭回调
+    });
+}
+
+// 关闭模态框
+export function closeModal() {
+    currentModal.set(null);
+    modalProps.set({});
+}
+
 /**
  * 删除选定的文件夹
  * @param folderId 需要删除的文件夹ID
@@ -57,6 +80,8 @@ export const deleteSelectedFolders = async ({
     folderId: string;
     deleteItems: boolean;
 }) => {
+    folderIdToDelete.set([folderId]);
+
     try {
         delFolder({ folderId, deleteItems });
     } catch (error) {
