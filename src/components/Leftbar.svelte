@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-05 21:27:58
+  LastEditTime: 2025-02-06 21:22:27
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -23,7 +23,7 @@
 	import { browser } from '$app/environment';
 	import { fetchFolders } from './api';
 	import type { Folder } from './type';
-	import { deleteSelectedFolders } from './utils';
+	import { deleteSelectedFolders, showDeleteConfirmationModal } from './utils';
 
 	let isLoading = false;
 	let leftBarElement: HTMLElement;
@@ -45,10 +45,7 @@
 				console.log('Selected folders:', Object.keys($selectedFolderIDs));
 			} else if (event.key === 'Delete') {
 				event.preventDefault();
-				deleteSelectedFolders({
-					folderId: Object.keys($selectedFolderIDs)[0],
-					deleteItems: false
-				});
+				showDeleteConfirmationModal();
 			} else if (event.key === 'Enter') {
 				event.preventDefault();
 			}
