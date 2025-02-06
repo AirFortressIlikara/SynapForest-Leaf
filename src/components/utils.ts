@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-04 19:13:07
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-04 19:23:06
+ * @LastEditTime: 2025-02-06 21:15:55
  * @FilePath: /SynapForest/src/components/utils.ts
  * @Description: 
  * 
@@ -17,8 +17,10 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from "svelte/store";
-import { isDeleted, itemTrigger, selectedItemIDs } from "./stores";
-import { delItems } from "./api";
+import { currentModal, folderIdToDelete, folders, itemTrigger, modalProps, selectedFolderIDs, selectedItemIDs } from "./stores";
+import { delFolder, delItems, fetchFolders } from "./api";
+import type { Folder } from "./type";
+import FolderDeleteConfirmModal from "./modal/FolderDeleteConfirmModal.svelte";
 
 /**
  * 删除选定的项目
@@ -43,3 +45,72 @@ export const deleteSelectedItems = async ({
         setTimeout(() => itemTrigger.set(!get(itemTrigger)), 10);
     }
 };
+
+// 显示删除确认模态框
+export function showDeleteConfirmationModal() {
+    console.log('showDeleteConfirmationModal')
+    currentModal.set(FolderDeleteConfirmModal);
+    modalProps.set({
+        onConfirm: (deleteItems: boolean) => {
+            deleteSelectedFolders({
+                folderId: Object.keys(get(selectedFolderIDs))[0],
+                deleteItems
+            });
+            closeModal();
+        }, // 传递确认回调
+        onClose: closeModal,   // 传递关闭回调
+    });
+}
+
+// 关闭模态框
+export function closeModal() {
+    currentModal.set(null);
+    modalProps.set({});
+}
+
+/**
+ * 删除选定的文件夹
+ * @param folderId 需要删除的文件夹ID
+ * @throws 如果删除过程中发生错误，抛出异常
+ */
+export const deleteSelectedFolders = async ({
+    folderId,
+    deleteItems
+}: {
+    folderId: string;
+    deleteItems: boolean;
+}) => {
+    folderIdToDelete.set([folderId]);
+
+    try {
+        delFolder({ folderId, deleteItems });
+    } catch (error) {
+        console.error('Error deleting folders:', error);
+        throw error;
+    } finally {
+        console.log('Deleted folders:', folderId);
+        selectedFolderIDs.set({});
+        setTimeout(() => updateFolderTree(), 10);
+    }
+};
+
+/**
+ * 更新所有文件夹
+ * @throws 如果更新过程中发生错误，抛出异常
+ */
+export const updateFolderTree = async () => {
+    try {
+        const fetchedFolders = await fetchFolders({});
+
+        const foldersMap: Record<string, Folder> = {};
+        fetchedFolders.forEach((folder) => {
+            foldersMap[folder.id] = folder;
+        });
+
+        folders.set(foldersMap);
+    } catch (error) {
+        console.error('Error preparing folders:', error);
+        throw error;
+    } finally {
+    }
+}
