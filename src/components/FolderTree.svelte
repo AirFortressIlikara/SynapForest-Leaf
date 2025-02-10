@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 13:33:00
+  LastEditTime: 2025-02-10 13:47:30
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -42,11 +42,16 @@
 			let newselectedFolderIDs = { ...$selectedFolderIDs };
 			if (event.ctrlKey) {
 				if (newselectedFolderIDs[folderId]) {
+					selectedItemIDs.set({});
 					delete newselectedFolderIDs[folderId];
 				} else {
+					if (Object.keys(newselectedFolderIDs).length === 0) {
+						selectedItemIDs.set({});
+					}
 					newselectedFolderIDs[folderId] = true;
 				}
 			} else {
+				selectedItemIDs.set({});
 				newselectedFolderIDs = { [folderId]: true };
 			}
 			return newselectedFolderIDs;
