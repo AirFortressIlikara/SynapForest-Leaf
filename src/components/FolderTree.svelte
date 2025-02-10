@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 13:47:30
+  LastEditTime: 2025-02-10 19:33:51
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -23,12 +23,13 @@
 		menuType,
 		menuX,
 		menuY,
-		selectedFolderIDs,
 		selectedItemIDs,
 		showMenu
 	} from './stores';
 	import { addFolderForItems, updateFoldersParent, uploadFiles } from './api/index';
+	import { type Writable } from 'svelte/store';
 
+	export let selectedFolderIDs: Writable<Record<string, boolean>>;
 	export let folderId: string;
 	export let level: number = 0;
 
@@ -159,14 +160,14 @@
 		{#if folder.isExpand}
 			<div class="sub-folders">
 				{#each subFolderIDs as subFolderID}
-					<svelte:self folderId={subFolderID} level={level + 1} />
+					<svelte:self {selectedFolderIDs} folderId={subFolderID} level={level + 1} />
 				{/each}
 			</div>
 		{/if}
 	</div>
 {:else}
 	{#each subFolderIDs as subFolderID}
-		<svelte:self folderId={subFolderID} level={level + 1} />
+		<svelte:self {selectedFolderIDs} folderId={subFolderID} level={level + 1} />
 	{/each}
 {/if}
 

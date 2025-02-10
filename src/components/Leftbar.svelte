@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-06 21:22:27
+  LastEditTime: 2025-02-10 19:34:15
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -23,7 +23,7 @@
 	import { browser } from '$app/environment';
 	import { fetchFolders } from './api';
 	import type { Folder } from './type';
-	import { deleteSelectedFolders, showDeleteConfirmationModal } from './utils';
+	import { showDeleteConfirmationModal } from './utils';
 
 	let isLoading = false;
 	let leftBarElement: HTMLElement;
@@ -101,7 +101,7 @@
 	{#if isLoading}
 		<p>Loading folders...</p>
 	{:else}
-		<FolderTree folderId={'00000000-0000-0000-0000-000000000000'} level={0} />
+		<FolderTree {selectedFolderIDs} folderId={'00000000-0000-0000-0000-000000000000'} level={0} />
 	{/if}
 </div>
 
