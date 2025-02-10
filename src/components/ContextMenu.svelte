@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 15:42:50
+  LastEditTime: 2025-02-10 19:57:45
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -58,7 +58,8 @@
 					currentModal.set(SelectTargetFolderModal);
 					modalProps.set({
 						onConfirm: (targetFolderId: string) => {}, // 传递确认回调
-						onClose: closeModal // 传递关闭回调
+						onClose: closeModal, // 传递关闭回调
+						maxSelectCount: 1
 					});
 				}
 			},
@@ -78,7 +79,8 @@
 					currentModal.set(SelectTargetFolderModal);
 					modalProps.set({
 						onConfirm: (targetFolderId: string) => {}, // 传递确认回调
-						onClose: closeModal // 传递关闭回调
+						onClose: closeModal, // 传递关闭回调
+						maxSelectCount: null
 					});
 				}
 			}

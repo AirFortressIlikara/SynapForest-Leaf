@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-10 15:07:07
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 15:41:53
+  LastEditTime: 2025-02-10 20:03:50
   FilePath: /SynapForest/src/components/modal/SelectTargetFolderModal.svelte
   Description: 
   
@@ -17,22 +17,34 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	export let onConfirm: (deleteItems: string) => void;
-	export let onClose: () => void;
+	import { writable } from 'svelte/store';
+	import FolderTree from '../FolderTree.svelte';
 
-	let targetFolderId: string | null = null;
+	export let onConfirm: (deleteItems: string[]) => void;
+	export let onClose: () => void;
+	export let maxSelectCount: number | null = null;
+
+	const selectedFolderIDs = writable<Record<string, boolean>>({});
+
+	let targetFolderIds: string[] = [];
 </script>
 
 <div>
-	<p>这里放一个文件夹树供选择</p>
+	<FolderTree {selectedFolderIDs} folderId={'00000000-0000-0000-0000-000000000000'} level={0} />
 	<div>
 		<button
 			on:click={() => {
-				if (targetFolderId !== null) {
-					onConfirm(targetFolderId);
+				const selectedIds = Object.keys($selectedFolderIDs);
+
+				if (maxSelectCount === null) {
+					targetFolderIds = selectedIds;
+				} else {
+					targetFolderIds = selectedIds.slice(0, maxSelectCount);
 				}
+
+				onConfirm(targetFolderIds);
 			}}
-			disabled={targetFolderId === null}
+			disabled={Object.keys($selectedFolderIDs).length === 0}
 		>
 			Confirm
 		</button>
