@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 19:08:07
+  LastEditTime: 2025-02-10 13:33:00
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -131,6 +131,9 @@
 			on:contextmenu={(event) => {
 				event.stopPropagation();
 				event.preventDefault();
+				if (!(folderId in $selectedFolderIDs)) {
+					handleFolderClick(event, folderId);
+				}
 				menuX.set(event.clientX);
 				menuY.set(event.clientY);
 				menuType.set('Folder');
