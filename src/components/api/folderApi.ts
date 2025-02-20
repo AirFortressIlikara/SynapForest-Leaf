@@ -1,8 +1,8 @@
 /*
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
- * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-05 20:15:40
+ * @LastEditors: ilikara 3435193369@qq.com
+ * @LastEditTime: 2025-02-20 15:13:27
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -246,6 +246,58 @@ export const delFolder = async ({
         return;
     } catch (error) {
         console.error('Error moving folders to trash:', error);
+        throw error;
+    }
+};
+
+/**
+ * 创建新文件夹
+ * @param folderName 新文件夹的名称
+ * @param parent 父文件夹的ID
+ * @throws 如果请求失败或服务器返回错误，抛出异常
+ */
+export const createFolder = async ({
+    folderName,
+    parent
+}: {
+    folderName: string;
+    parent?: string;
+}) => {
+    try {
+        const address = get(serverAddress);
+        const authToken = get(token);
+
+        if (!address || !authToken) {
+            throw new Error('Server address or token is missing');
+        }
+
+        const body = JSON.stringify({
+            folderName,
+            parent,
+        });
+
+        const response = await fetch(`${address}/api/folder/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
+            },
+            body: body,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create folder');
+        }
+
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'Unknown error occurred');
+        }
+
+        return result.data;
+    } catch (error) {
+        console.error('Error creating folder:', error);
         throw error;
     }
 };

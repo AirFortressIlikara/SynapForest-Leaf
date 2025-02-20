@@ -28,7 +28,8 @@
 		selectedFolderIDs,
 		folders
 	} from './stores';
-	import { deleteSelectedFolders, deleteSelectedItems, showDeleteConfirmationModal } from './utils';
+	import { deleteSelectedItems, showDeleteConfirmationModal, updateFolderTree } from './utils';
+	import { createFolder } from './api';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
@@ -50,7 +51,24 @@
 					});
 				}
 			},
-			{ label: '移动至', action: () => console.log('MoveTo clicked') }
+			{ label: '移动至', action: () => console.log('MoveTo clicked') },
+			{
+				label: '新建子文件夹',
+				action: () => {
+					console.log('clicked');
+					createFolder({ folderName: 'OvO', parent: Object.keys($selectedFolderIDs)[0] });
+					setTimeout(() => updateFolderTree(), 10);
+				}
+			},
+			{
+				label: '在同级目录新建文件夹',
+				action: () => {
+					console.log('clicked');
+					const parent = $folders[Object.keys($selectedFolderIDs)[0]].parent;
+					createFolder({ folderName: 'OvO', parent });
+					setTimeout(() => updateFolderTree(), 10);
+				}
+			}
 		],
 		Item: [
 			{
