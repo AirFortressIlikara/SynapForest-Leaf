@@ -21,13 +21,14 @@
 	import FolderTree from './FolderTree.svelte';
 	import { folders, selectedFolderIDs } from './stores';
 	import { browser } from '$app/environment';
-	import { fetchFolders } from './api';
+	import { createFolder, fetchFolders } from './api';
 	import type { Folder } from './type';
-	import { showDeleteConfirmationModal } from './utils';
+	import { showDeleteConfirmationModal, updateFolderTree } from './utils';
 
 	let isLoading = false;
 	let leftBarElement: HTMLElement;
 	let isFocused = false;
+	let isExpanded = true;
 
 	function handleSelectAll(event: KeyboardEvent) {
 		if (isFocused) {
@@ -101,7 +102,35 @@
 	{#if isLoading}
 		<p>Loading folders...</p>
 	{:else}
-		<FolderTree {selectedFolderIDs} folderId={'00000000-0000-0000-0000-000000000000'} level={0} />
+		<div class="folder-tree-container">
+			<div class="folder-tree-header">
+				<button
+					on:click={(event) => {
+						event.stopPropagation();
+						isExpanded = !isExpanded;
+					}}
+				>
+					{isExpanded ? '▼' : '▶'}
+				</button>
+				<span>Folders</span>
+				<button
+					on:click={(event) => {
+						event.stopPropagation();
+						console.log('Add folder Clicked');
+						createFolder({ folderName: 'OvO' });
+						setTimeout(() => updateFolderTree(), 10);
+					}}
+					class="add-button">+</button
+				>
+			</div>
+			{#if isExpanded}
+				<FolderTree
+					{selectedFolderIDs}
+					folderId={'00000000-0000-0000-0000-000000000000'}
+					level={0}
+				/>
+			{/if}
+		</div>
 	{/if}
 </div>
 

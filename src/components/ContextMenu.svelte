@@ -30,8 +30,9 @@
 		currentModal,
 		modalProps
 	} from './stores';
-	import { closeModal, deleteSelectedItems, showDeleteConfirmationModal } from './utils';
+	import { closeModal, deleteSelectedItems, showDeleteConfirmationModal, updateFolderTree } from './utils';
 	import SelectTargetFolderModal from './modal/SelectTargetFolderModal.svelte';
+	import { createFolder } from './api';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
@@ -63,8 +64,23 @@
 					});
 				}
 			},
-			{ label: '新建子文件夹', action: () => console.log('clicked') },
-			{ label: '在同级目录新建文件夹', action: () => console.log('clicked') }
+			{
+				label: '新建子文件夹',
+				action: () => {
+					console.log('clicked');
+					createFolder({ folderName: 'OvO', parent: Object.keys($selectedFolderIDs)[0] });
+					setTimeout(() => updateFolderTree(), 10);
+				}
+			},
+			{
+				label: '在同级目录新建文件夹',
+				action: () => {
+					console.log('clicked');
+					const parent = $folders[Object.keys($selectedFolderIDs)[0]].parent;
+					createFolder({ folderName: 'OvO', parent });
+					setTimeout(() => updateFolderTree(), 10);
+				}
+			}
 		],
 		Item: [
 			{
