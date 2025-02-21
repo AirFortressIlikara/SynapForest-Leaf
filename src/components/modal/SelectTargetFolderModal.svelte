@@ -20,7 +20,7 @@
 	import { writable } from 'svelte/store';
 	import FolderTree from '../FolderTree.svelte';
 
-	export let onConfirm: (deleteItems: string[]) => void;
+	export let onConfirm: (targetFolderIds: string[]) => void;
 	export let onClose: () => void;
 	export let maxSelectCount: number | null = null;
 

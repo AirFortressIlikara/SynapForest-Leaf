@@ -30,9 +30,14 @@
 		currentModal,
 		modalProps
 	} from './stores';
-	import { closeModal, deleteSelectedItems, showDeleteConfirmationModal, updateFolderTree } from './utils';
+	import {
+		closeModal,
+		deleteSelectedItems,
+		showDeleteConfirmationModal,
+		updateFolderTree
+	} from './utils';
 	import SelectTargetFolderModal from './modal/SelectTargetFolderModal.svelte';
-	import { createFolder } from './api';
+	import { createFolder, updateFoldersParent } from './api';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
@@ -58,7 +63,13 @@
 				action: () => {
 					currentModal.set(SelectTargetFolderModal);
 					modalProps.set({
-						onConfirm: (targetFolderId: string) => {}, // 传递确认回调
+						onConfirm: (targetFolderIds: string) => {
+							updateFoldersParent({
+								folderIds: Object.keys($selectedFolderIDs),
+								newParent: targetFolderIds[0]
+							});
+							closeModal();
+						}, // 传递确认回调
 						onClose: closeModal, // 传递关闭回调
 						maxSelectCount: 1
 					});
