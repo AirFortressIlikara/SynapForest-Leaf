@@ -37,7 +37,7 @@
 		updateFolderTree
 	} from './utils';
 	import SelectTargetFolderModal from './modal/SelectTargetFolderModal.svelte';
-	import { createFolder, updateFoldersParent } from './api';
+	import { addFolderForItems, createFolder, updateFoldersParent } from './api';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
@@ -63,7 +63,7 @@
 				action: () => {
 					currentModal.set(SelectTargetFolderModal);
 					modalProps.set({
-						onConfirm: (targetFolderIds: string) => {
+						onConfirm: (targetFolderIds: string[]) => {
 							updateFoldersParent({
 								folderIds: Object.keys($selectedFolderIDs),
 								newParent: targetFolderIds[0]
@@ -105,7 +105,13 @@
 				action: () => {
 					currentModal.set(SelectTargetFolderModal);
 					modalProps.set({
-						onConfirm: (targetFolderId: string) => {}, // 传递确认回调
+						onConfirm: (targetFolderIds: string[]) => {
+							addFolderForItems({
+								itemIds: Object.keys($selectedItemIDs),
+								folderIds: targetFolderIds
+							});
+							closeModal();
+						}, // 传递确认回调
 						onClose: closeModal, // 传递关闭回调
 						maxSelectCount: null
 					});

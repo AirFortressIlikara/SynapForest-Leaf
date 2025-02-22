@@ -17,19 +17,12 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import {
-		folders,
-		itemTrigger,
-		menuType,
-		menuX,
-		menuY,
-		selectedItemIDs,
-		showMenu
-	} from './stores';
+	import { folders, itemTrigger, menuType, menuX, menuY, showMenu } from './stores';
 	import { addFolderForItems, updateFoldersParent, uploadFiles } from './api/index';
 	import { type Writable } from 'svelte/store';
 
 	export let selectedFolderIDs: Writable<Record<string, boolean>>;
+	export let selectedItemIDs: Writable<Record<string, boolean>>;
 	export let folderId: string;
 	export let level: number = 0;
 
@@ -82,7 +75,7 @@
 				Object.keys($selectedItemIDs)
 			);
 			try {
-				addFolderForItems({ itemIds: Object.keys($selectedItemIDs), folderId });
+				addFolderForItems({ itemIds: Object.keys($selectedItemIDs), folderIds: [folderId] });
 			} catch (error) {
 				console.error('Error addFolderForItems:', error);
 			} finally {
@@ -160,14 +153,19 @@
 		{#if folder.isExpand}
 			<div class="sub-folders">
 				{#each subFolderIDs as subFolderID}
-					<svelte:self {selectedFolderIDs} folderId={subFolderID} level={level + 1} />
+					<svelte:self
+						{selectedFolderIDs}
+						{selectedItemIDs}
+						folderId={subFolderID}
+						level={level + 1}
+					/>
 				{/each}
 			</div>
 		{/if}
 	</div>
 {:else}
 	{#each subFolderIDs as subFolderID}
-		<svelte:self {selectedFolderIDs} folderId={subFolderID} level={level + 1} />
+		<svelte:self {selectedFolderIDs} {selectedItemIDs} folderId={subFolderID} level={level + 1} />
 	{/each}
 {/if}
 

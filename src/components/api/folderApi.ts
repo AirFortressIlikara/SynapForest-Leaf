@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
  * @LastEditors: ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-20 15:13:27
+ * @LastEditTime: 2025-02-21 07:52:15
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -28,10 +28,10 @@ import type { Folder } from '../type';
  */
 export const addFolderForItems = async ({
     itemIds,
-    folderId
+    folderIds
 }: {
     itemIds: string[];
-    folderId: string;
+    folderIds: string[];
 }) => {
     try {
         const address = get(serverAddress);
@@ -43,7 +43,7 @@ export const addFolderForItems = async ({
 
         const body = JSON.stringify({
             itemIds,
-            folderId,
+            folderIds,
         });
 
         const response = await fetch(`${address}/api/item/add-folder`, {

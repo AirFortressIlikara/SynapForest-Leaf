@@ -25,12 +25,18 @@
 	export let maxSelectCount: number | null = null;
 
 	const selectedFolderIDs = writable<Record<string, boolean>>({});
+	const selectedItemIDs = writable<Record<string, boolean>>({});
 
 	let targetFolderIds: string[] = [];
 </script>
 
 <div>
-	<FolderTree {selectedFolderIDs} folderId={'00000000-0000-0000-0000-000000000000'} level={0} />
+	<FolderTree
+		{selectedFolderIDs}
+		{selectedItemIDs}
+		folderId={'00000000-0000-0000-0000-000000000000'}
+		level={0}
+	/>
 	<div>
 		<button
 			on:click={() => {

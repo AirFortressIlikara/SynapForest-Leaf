@@ -19,7 +19,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import FolderTree from './FolderTree.svelte';
-	import { folders, selectedFolderIDs } from './stores';
+	import { folders, selectedFolderIDs, selectedItemIDs } from './stores';
 	import { browser } from '$app/environment';
 	import { createFolder, fetchFolders } from './api';
 	import type { Folder } from './type';
@@ -126,6 +126,7 @@
 			{#if isExpanded}
 				<FolderTree
 					{selectedFolderIDs}
+					{selectedItemIDs}
 					folderId={'00000000-0000-0000-0000-000000000000'}
 					level={0}
 				/>
