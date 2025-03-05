@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 19:57:45
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-03-05 13:43:26
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -28,7 +28,8 @@
 		selectedFolderIDs,
 		folders,
 		currentModal,
-		modalProps
+		modalProps,
+		itemEditing
 	} from './stores';
 	import {
 		closeModal,
@@ -37,7 +38,8 @@
 		updateFolderTree
 	} from './utils';
 	import SelectTargetFolderModal from './modal/SelectTargetFolderModal.svelte';
-	import { addFolderForItems, createFolder, updateFoldersParent } from './api';
+	import { addFolderForItems, createFolder, updateFolderName, updateFoldersParent } from './api';
+	import RenameModal from './modal/RenameModal.svelte';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
 		Folder: [
@@ -45,6 +47,24 @@
 				label: '删除',
 				action: () => {
 					showDeleteConfirmationModal();
+				}
+			},
+			{
+				label: '重命名',
+				action: () => {
+					currentModal.set(RenameModal);
+					modalProps.set({
+						onConfirm: (newName: string) => {
+							updateFolderName({
+								folderId: Object.keys($selectedFolderIDs)[0],
+								newName
+							});
+							console.log('newName:', newName);
+							closeModal();
+						},
+						onClose: closeModal
+					});
+					console.log('重命名', $itemEditing);
 				}
 			},
 			{
@@ -101,6 +121,20 @@
 				}
 			},
 			{
+				label: '重命名',
+				action: () => {
+					currentModal.set(RenameModal);
+					modalProps.set({
+						onConfirm: (newName: string) => {
+							console.log('newName:', newName);
+							closeModal();
+						},
+						onClose: closeModal
+					});
+					console.log('重命名', $itemEditing);
+				}
+			},
+			{
 				label: '移动至',
 				action: () => {
 					currentModal.set(SelectTargetFolderModal);
@@ -141,8 +175,6 @@
 </script>
 
 <div bind:this={menuElement} {style} class="context-menu" tabindex="-1" on:blur={closeMenu}>
-	<div>坐标: X:{$menuX} Y:{$menuY}</div>
-	<div>类型: {$menuType}</div>
 	{#each items as item}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -150,6 +182,8 @@
 			{item.label}
 		</div>
 	{/each}
+	<div>坐标: X:{$menuX} Y:{$menuY}</div>
+	<div>类型: {$menuType}</div>
 </div>
 
 <style>
