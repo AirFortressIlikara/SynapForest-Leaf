@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-10 15:07:07
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 20:03:50
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-03-05 13:16:27
   FilePath: /SynapForest/src/components/modal/SelectTargetFolderModal.svelte
   Description: 
   
@@ -31,14 +31,16 @@
 </script>
 
 <div>
+	<p class="modal-title">Select Target Folder:</p>
 	<FolderTree
 		{selectedFolderIDs}
 		{selectedItemIDs}
 		folderId={'00000000-0000-0000-0000-000000000000'}
 		level={0}
 	/>
-	<div>
+	<div class="modal-actions">
 		<button
+			class="modal-button primary"
 			on:click={() => {
 				const selectedIds = Object.keys($selectedFolderIDs);
 
@@ -54,6 +56,6 @@
 		>
 			Confirm
 		</button>
-		<button on:click={onClose}>Cancel</button>
+		<button class="modal-button secondary" on:click={onClose}>Cancel</button>
 	</div>
 </div>

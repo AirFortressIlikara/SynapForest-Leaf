@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-06 18:51:59
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-06 21:05:46
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-03-05 13:15:22
   FilePath: /SynapForest/src/components/modal/FolderDeleteConfirmModal.svelte
   Description: 
   
@@ -24,13 +24,13 @@
 </script>
 
 <div>
-	<p>Are you sure you want to delete items in folder?</p>
+	<p class="modal-title">Are you sure you want to delete items in folder?</p>
 	<label>
 		<input type="checkbox" bind:checked={deleteItems} />
 		Delete permanently
 	</label>
-	<div>
-		<button on:click={() => onConfirm(deleteItems)}>Confirm</button>
-		<button on:click={onClose}>Cancel</button>
+	<div class="modal-actions">
+		<button class="modal-button primary" on:click={() => onConfirm(deleteItems)}>Confirm</button>
+		<button class="modal-button secondary" on:click={onClose}>Cancel</button>
 	</div>
 </div>
