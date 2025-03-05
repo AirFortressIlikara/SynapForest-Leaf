@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-04 19:24:50
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-03-05 14:08:38
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -17,15 +17,13 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { get } from 'svelte/store';
-	import { items, menuType, menuX, menuY, showMenu, selectedItemIDs } from './stores';
+	import { items, menuType, menuX, menuY, showMenu, selectedItemIDs, itemEditing } from './stores';
 	import AuthImg from './AuthImg.svelte';
 
 	export let rowItemIDs: string[];
 
 	export let elementWidth: number = 0;
 
-	let editingImageId = null;
 	let editedName = '';
 
 	console.log('Row item IDs:', rowItemIDs);
@@ -33,7 +31,7 @@
 	$: rowHeight =
 		(elementWidth - rowItemIDs.length * 20) /
 		rowItemIDs.reduce((acc: number, id: string) => {
-			const item = get(items)[id];
+			const item = $items[id];
 			if (item && item.height !== 0) {
 				return acc + item.width / item.height;
 			} else {
@@ -70,8 +68,8 @@
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			class="image-item {itemID in $selectedItemIDs ? 'selected' : ''}"
-			style="height: {rowHeight + 60}px; width: {(rowHeight * get(items)[itemID].width) /
-				get(items)[itemID].height}px;"
+			style="height: {rowHeight + 60}px; width: {(rowHeight * $items[itemID].width) /
+				$items[itemID].height}px;"
 			on:click={(event) => {
 				event.stopPropagation();
 				handleItemClick(event, itemID);
@@ -95,12 +93,12 @@
 			}}
 		>
 			<img
-				src={get(items)[itemID].rawUrl}
+				src={$items[itemID].previewUrl}
 				alt={itemID}
-				style="height: {rowHeight}px; width:{(rowHeight * get(items)[itemID].width) /
-					get(items)[itemID].height}px;"
+				style="height: {rowHeight}px; width:{(rowHeight * $items[itemID].width) /
+					$items[itemID].height}px;"
 			/>
-			{#if editingImageId === itemID}
+			{#if $itemEditing === itemID}
 				<input
 					type="text"
 					bind:value={editedName}
@@ -108,12 +106,12 @@
 				/>
 			{:else}
 				<div class="image-name" style="padding: 4px;">
-					{get(items)[itemID].name}
+					{$items[itemID].name}
 				</div>
 			{/if}
 
 			<div class="image-date" style="color: #666; font-size: 0.9em;">
-				{get(items)[itemID].modifiedAt}
+				{$items[itemID].modifiedAt}
 			</div>
 		</div>
 	{/each}
@@ -142,6 +140,7 @@
 		width: 100%;
 		text-align: center;
 		font-size: 1rem;
+		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
@@ -150,6 +149,7 @@
 		width: 100%;
 		text-align: center;
 		font-size: 1rem;
+		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}

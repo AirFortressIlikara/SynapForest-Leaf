@@ -1,8 +1,8 @@
 /*
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:01:07
- * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 15:57:43
+ * @LastEditors: ilikara 3435193369@qq.com
+ * @LastEditTime: 2025-03-05 13:53:11
  * @FilePath: /SynapForest/src/components/api/itemApi.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from 'svelte/store';
-import { serverAddress, token } from '../stores';
+import { items, serverAddress, token } from '../stores';
 import type { Item } from '../type';
 
 /**
@@ -179,5 +179,62 @@ export const fetchItems = async ({
     } catch (error) {
         console.error('Error fetching folders:', error);
         return [];
+    }
+};
+
+/**
+ * 更新项目名称
+ * @param newName 项目的新名称
+ * @param itemId 项目的ID
+ * @throws 如果请求失败或服务器返回错误，抛出异常
+ */
+export const updateItemName = async ({
+    newName,
+    itemId,
+}: {
+    newName: string;
+    itemId: string;
+}) => {
+    try {
+        const address = get(serverAddress);
+        const authToken = get(token);
+
+        if (!address || !authToken) {
+            throw new Error('Server address or token is missing');
+        }
+
+        const body = JSON.stringify({
+            name: newName,
+            id: itemId,
+        });
+
+        const response = await fetch(`${address}/api/item/update`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${authToken}`,
+            },
+            body: body,
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update item name');
+        }
+
+        const result = await response.json();
+
+        if (result.status !== 'success') {
+            throw new Error(result.message || 'Unknown error occurred');
+        }
+
+        return result.data;
+    } catch (error) {
+        console.error('Error updating item name:', error);
+        throw error;
+    } finally {
+        items.update(currentItems => {
+            currentItems[itemId].name = newName;
+            return currentItems;
+        });
     }
 };
