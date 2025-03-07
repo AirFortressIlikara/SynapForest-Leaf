@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-03 16:17:24
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-03-07 10:44:09
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -19,6 +19,7 @@
 <script lang="ts">
 	import { folders, items, selectedItemIDs } from './stores';
 	import * as m from '$lib/paraglide/messages.js';
+	import { updateItem } from './api';
 
 	$: selectItemCount = Object.keys($selectedItemIDs).length;
 	$: firstSelectedItem = $items[Object.keys($selectedItemIDs)[0]];
@@ -72,9 +73,54 @@
 			<div>{m.selected_count({ count: selectItemCount })}</div>
 		{/if}
 		{#if selectItemCount === 1}
-			<input type="text" bind:value={firstSelectedItem.name} placeholder="文件名" />
-			<input type="text" bind:value={firstSelectedItem.annotation} placeholder="注释" />
-			<input type="text" bind:value={firstSelectedItem.url} placeholder="Url" />
+			<input
+				type="text"
+				bind:value={firstSelectedItem.name}
+				on:blur={() => {
+					updateItem({
+						itemId: firstSelectedItem.id,
+						name: firstSelectedItem.name
+					});
+				}}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						(e.target as HTMLElement).blur();
+					}
+				}}
+				placeholder="文件名"
+			/>
+			<input
+				type="text"
+				bind:value={firstSelectedItem.annotation}
+				on:blur={() => {
+					updateItem({
+						itemId: firstSelectedItem.id,
+						annotation: firstSelectedItem.annotation
+					});
+				}}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						(e.target as HTMLElement).blur();
+					}
+				}}
+				placeholder="注释"
+			/>
+			<input
+				type="text"
+				bind:value={firstSelectedItem.url}
+				on:blur={() => {
+					updateItem({
+						itemId: firstSelectedItem.id,
+						url: firstSelectedItem.url
+					});
+				}}
+				on:keydown={(e) => {
+					if (e.key === 'Enter') {
+						(e.target as HTMLElement).blur();
+					}
+				}}
+				placeholder="Url"
+			/>
 		{/if}
 		<div class="tags">
 			<strong>Tags:</strong>

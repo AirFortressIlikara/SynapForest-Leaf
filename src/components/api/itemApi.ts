@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:01:07
  * @LastEditors: ilikara 3435193369@qq.com
- * @LastEditTime: 2025-03-05 13:53:11
+ * @LastEditTime: 2025-03-07 10:22:45
  * @FilePath: /SynapForest/src/components/api/itemApi.ts
  * @Description: 
  * 
@@ -183,16 +183,22 @@ export const fetchItems = async ({
 };
 
 /**
- * 更新项目名称
- * @param newName 项目的新名称
+ * 更新项目
+ * @param name 项目的新名称
+ * @param annotation 项目的新注释
+ * @param url 项目的新url
  * @param itemId 项目的ID
  * @throws 如果请求失败或服务器返回错误，抛出异常
  */
-export const updateItemName = async ({
-    newName,
+export const updateItem = async ({
+    name,
+    annotation,
+    url,
     itemId,
 }: {
-    newName: string;
+    name?: string;
+    annotation?: string;
+    url?: string;
     itemId: string;
 }) => {
     try {
@@ -204,8 +210,10 @@ export const updateItemName = async ({
         }
 
         const body = JSON.stringify({
-            name: newName,
+            name,
             id: itemId,
+            annotation,
+            url,
         });
 
         const response = await fetch(`${address}/api/item/update`, {
@@ -233,7 +241,12 @@ export const updateItemName = async ({
         throw error;
     } finally {
         items.update(currentItems => {
-            currentItems[itemId].name = newName;
+            if (name)
+                currentItems[itemId].name = name;
+            if (annotation)
+                currentItems[itemId].annotation = annotation;
+            if (url)
+                currentItems[itemId].url = url;
             return currentItems;
         });
     }

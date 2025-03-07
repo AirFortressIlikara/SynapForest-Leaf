@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-05 13:51:12
+  LastEditTime: 2025-03-07 10:24:01
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -38,7 +38,13 @@
 		updateFolderTree
 	} from './utils';
 	import SelectTargetFolderModal from './modal/SelectTargetFolderModal.svelte';
-	import { addFolderForItems, createFolder, updateFolderName, updateFoldersParent, updateItemName } from './api';
+	import {
+		addFolderForItems,
+		createFolder,
+		updateFolderName,
+		updateFoldersParent,
+		updateItem
+	} from './api';
 	import RenameModal from './modal/RenameModal.svelte';
 
 	const menuItemsMap: Record<string, { label: string; action: () => void }[]> = {
@@ -126,9 +132,9 @@
 					currentModal.set(RenameModal);
 					modalProps.set({
 						onConfirm: (newName: string) => {
-							updateItemName({
+							updateItem({
 								itemId: Object.keys($selectedItemIDs)[0],
-								newName
+								name: newName
 							});
 							console.log('newName:', newName);
 							closeModal();
