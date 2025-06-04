@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
-  LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-04 14:55:45
+  LastEditors: Ilikara 3435193369@qq.com
+  LastEditTime: 2025-06-04 23:19:02
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -20,7 +20,7 @@
 	import { ChevronDown, ChevronLeft, Plus } from '@lucide/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import FolderTree from './FolderTree.svelte';
-	import { folders, selectedFolderIDs, selectedItemIDs } from './stores';
+	import { folders, quickAccessActive, selectedFolderIDs, selectedItemIDs } from './stores';
 	import { browser } from '$app/environment';
 	import { createFolder, fetchFolders } from './api';
 	import type { Folder } from './type';
@@ -91,11 +91,6 @@
 <div
 	bind:this={leftBarElement}
 	class="leftbar"
-	on:click={(event) => {
-		event.stopPropagation();
-		$selectedFolderIDs = {};
-		console.log('Selected folders:', Object.keys($selectedFolderIDs));
-	}}
 	on:focus={() => (isFocused = true)}
 	on:blur={() => (isFocused = false)}
 	tabindex="0"
@@ -103,7 +98,39 @@
 	{#if isLoading}
 		<p>Loading folders...</p>
 	{:else}
-		<div class="folder-tree-container">
+		<div class="quick-access-container">
+			<button
+				class="quick-access-button {$quickAccessActive === 'all' ? 'active' : ''}"
+				on:click={() => {
+					quickAccessActive.set('all');
+					$selectedFolderIDs = {};
+				}}
+			>
+				All Items
+			</button>
+			<button
+				class="quick-access-button {$quickAccessActive === 'recent' ? 'active' : ''}"
+				on:click={() => {
+					quickAccessActive.set('recent');
+					// WIP
+				}}
+			>
+				Recent
+			</button>
+			<button
+				class="quick-access-button {$quickAccessActive === 'starred' ? 'active' : ''}"
+				on:click={() => {
+					quickAccessActive.set('starred');
+					// WIP
+				}}
+			>
+				Starred
+			</button>
+		</div>
+
+		<div
+			class="folder-tree-container"
+		>
 			<div class="folder-tree-header">
 				<span>Folders</span>
 				<button
@@ -145,6 +172,39 @@
 <style>
 	.leftbar {
 		height: 100%;
+	}
+	.quick-access-container {
+		/* 快速访问容器样式 */
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin: 8px 0;
+	}
+
+	.quick-access-button {
+		/* 快速访问按钮样式 */
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+			sans-serif;
+		border-radius: 6px;
+		background-color: #f8f9fa;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		padding: 12px;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+		font-weight: 500;
+		color: #212529;
+		transition: all 0.2s ease;
+	}
+
+	.quick-access-button:hover {
+		background-color: #e9ecef;
+	}
+
+	.quick-access-button.active {
+		background-color: #e9ecef;
+		box-shadow: inset 0 0 0 1px #dee2e6;
+		font-weight: 600;
 	}
 	.folder-tree-container {
 		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,

@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 19:33:51
+  LastEditTime: 2025-06-04 23:19:56
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -17,7 +17,15 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { folders, itemTrigger, menuType, menuX, menuY, showMenu } from './stores';
+	import {
+		folders,
+		itemTrigger,
+		menuType,
+		menuX,
+		menuY,
+		quickAccessActive,
+		showMenu
+	} from './stores';
 	import { addFolderForItems, updateFoldersParent, uploadFiles } from './api/index';
 	import { type Writable } from 'svelte/store';
 	import { FolderClosed, FolderOpen } from '@lucide/svelte';
@@ -117,6 +125,7 @@
 			on:click={(event) => {
 				event.stopPropagation();
 				handleFolderClick(event, folderId);
+				quickAccessActive.set(null);
 			}}
 			on:dragstart={(event) => {
 				if (!(folderId in $selectedFolderIDs)) {

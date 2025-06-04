@@ -1,8 +1,8 @@
 /*
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
- * @LastEditors: ilikara 3435193369@qq.com
- * @LastEditTime: 2025-03-05 11:22:02
+ * @LastEditors: Ilikara 3435193369@qq.com
+ * @LastEditTime: 2025-06-04 23:18:49
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -56,6 +56,8 @@ export const folders = writable<Record<string, Folder>>({
 });
 export const tags = writable<Record<string, Tag>>({});
 export const items = writable<Record<string, Item>>({});
+
+export const quickAccessActive = writable<string | null>(null);
 
 export const itemEditing = writable<string>('');
 export const folderEditing = writable<string>('');
