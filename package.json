@@ -41,6 +41,7 @@
 		"vitest": "^2.1.8"
 	},
 	"dependencies": {
-		"@inlang/paraglide-sveltekit": "^0.15.5"
+		"@inlang/paraglide-sveltekit": "^0.15.5",
+		"@lucide/svelte": "^0.512.0"
 	}
 }

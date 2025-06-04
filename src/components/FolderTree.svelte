@@ -20,6 +20,7 @@
 	import { folders, itemTrigger, menuType, menuX, menuY, showMenu } from './stores';
 	import { addFolderForItems, updateFoldersParent, uploadFiles } from './api/index';
 	import { type Writable } from 'svelte/store';
+	import { FolderClosed, FolderOpen } from '@lucide/svelte';
 
 	export let selectedFolderIDs: Writable<Record<string, boolean>>;
 	export let selectedItemIDs: Writable<Record<string, boolean>>;
@@ -146,7 +147,11 @@
 					folder.isExpand = !folder.isExpand;
 				}}
 			>
-				{folder.isExpand ? '📂' : '📁'}
+				{#if folder.isExpand}
+					<FolderOpen />
+				{:else}
+					<FolderClosed />
+				{/if}
 			</button>
 			{folder.name}
 		</div>

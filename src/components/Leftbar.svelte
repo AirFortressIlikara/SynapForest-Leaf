@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-10 19:34:15
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-06-04 14:55:45
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -17,6 +17,7 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
+	import { ChevronDown, ChevronLeft, Plus } from '@lucide/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import FolderTree from './FolderTree.svelte';
 	import { folders, selectedFolderIDs, selectedItemIDs } from './stores';
@@ -104,15 +105,19 @@
 	{:else}
 		<div class="folder-tree-container">
 			<div class="folder-tree-header">
+				<span>Folders</span>
 				<button
 					on:click={(event) => {
 						event.stopPropagation();
 						isExpanded = !isExpanded;
 					}}
 				>
-					{isExpanded ? '▼' : '▶'}
+					{#if isExpanded}
+						<ChevronDown />
+					{:else}
+						<ChevronLeft />
+					{/if}
 				</button>
-				<span>Folders</span>
 				<button
 					on:click={(event) => {
 						event.stopPropagation();
@@ -120,8 +125,10 @@
 						createFolder({ folderName: 'OvO' });
 						setTimeout(() => updateFolderTree(), 10);
 					}}
-					class="add-button">+</button
+					class="add-button"
 				>
+					<Plus />
+				</button>
 			</div>
 			{#if isExpanded}
 				<FolderTree
@@ -138,5 +145,65 @@
 <style>
 	.leftbar {
 		height: 100%;
+	}
+	.folder-tree-container {
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+			sans-serif;
+		border-radius: 6px;
+		background-color: #f8f9fa;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		overflow: hidden;
+		margin: 8px 0;
+	}
+
+	.folder-tree-header {
+		display: flex;
+		align-items: center;
+		padding: 8px 12px;
+		background-color: #e9ecef;
+		border-bottom: 1px solid #dee2e6;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.folder-tree-header span {
+		flex-grow: 1;
+		margin-left: 8px;
+		font-weight: 500;
+		color: #212529;
+	}
+
+	.folder-tree-header button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px;
+		border-radius: 4px;
+		color: #495057;
+		transition: all 0.2s ease;
+	}
+
+	.folder-tree-header button:hover {
+		background-color: #dee2e6;
+		color: #212529;
+	}
+
+	.add-button {
+		margin-left: auto;
+	}
+
+	/* 折叠/展开动画 */
+	.folder-tree-container > :not(.folder-tree-header) {
+		transition:
+			opacity 0.15s ease,
+			transform 0.15s ease;
+	}
+
+	.folder-tree-container:not(.expanded) > :not(.folder-tree-header) {
+		opacity: 0;
+		transform: translateY(-10px);
 	}
 </style>
