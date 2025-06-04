@@ -2,7 +2,7 @@
   Author: ilikara 3435193369@qq.com
   Date: 2025-03-05 11:45:56
   LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-05 13:13:21
+  LastEditTime: 2025-03-07 14:01:30
   FilePath: /SynapForest-Leaf/src/components/modal/RenameModal.svelte
   Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 
@@ -20,7 +20,7 @@
 	export let onConfirm: (newName: string) => void;
 	export let onClose: () => void;
 
-	let editedName: string; // 勾选框的状态
+	export let editedName: string; // 勾选框的状态
 </script>
 
 <div>
@@ -28,6 +28,11 @@
 	<input
 		type="text"
 		bind:value={editedName}
+		on:keydown={(e) => {
+			if (e.key === 'Enter') {
+				onConfirm(editedName);
+			}
+		}}
 		style="text-align: center; width: 100%; padding: 4px; border: 1px solid #ccc; border-radius: 4px;"
 	/>
 	<div class="modal-actions">

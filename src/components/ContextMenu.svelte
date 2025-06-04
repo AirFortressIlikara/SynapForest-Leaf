@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-07 10:24:01
+  LastEditTime: 2025-03-07 14:04:49
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -27,6 +27,7 @@
 		selectedItemIDs,
 		selectedFolderIDs,
 		folders,
+		items,
 		currentModal,
 		modalProps,
 		itemEditing
@@ -68,7 +69,8 @@
 							console.log('newName:', newName);
 							closeModal();
 						},
-						onClose: closeModal
+						onClose: closeModal,
+						editedName: $folders[Object.keys($selectedFolderIDs)[0]].name
 					});
 					console.log('重命名', $itemEditing);
 				}
@@ -139,7 +141,8 @@
 							console.log('newName:', newName);
 							closeModal();
 						},
-						onClose: closeModal
+						onClose: closeModal,
+						editedName: $items[Object.keys($selectedItemIDs)[0]].name
 					});
 					console.log('重命名', $itemEditing);
 				}
@@ -164,7 +167,7 @@
 		]
 	};
 
-	let items: { label: string; action: () => void }[] = menuItemsMap[$menuType];
+	let menuItems: { label: string; action: () => void }[] = menuItemsMap[$menuType];
 
 	let menuElement: HTMLDivElement;
 
@@ -185,7 +188,7 @@
 </script>
 
 <div bind:this={menuElement} {style} class="context-menu" tabindex="-1" on:blur={closeMenu}>
-	{#each items as item}
+	{#each menuItems as item}
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div on:click={() => handleItemClick(item.action)} class="menu-item">
