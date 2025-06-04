@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-06 19:31:46
   LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-05 13:14:42
+  LastEditTime: 2025-03-05 14:25:52
   FilePath: /SynapForest/src/components/modal/ModalContainer.svelte
   Description: 
   
@@ -59,9 +59,6 @@
 		font-size: 1.5rem;
 		font-weight: 600;
 		color: #1a1a1a;
-		margin-bottom: 1.5rem;
-		border-bottom: 2px solid #eee;
-		padding-bottom: 0.5rem;
 	}
 
 	.modal-content :global(.modal-actions) {

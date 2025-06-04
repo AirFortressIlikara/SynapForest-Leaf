@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
-  LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-02-05 21:28:31
+  LastEditors: ilikara 3435193369@qq.com
+  LastEditTime: 2025-03-07 10:51:03
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -161,6 +161,8 @@
 		width: 100%;
 		height: 100%;
 		background-color: #e0e0e0;
+		min-width: none;
+		max-width: none;
 	}
 
 	.image-grid {
