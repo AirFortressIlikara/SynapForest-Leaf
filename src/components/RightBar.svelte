@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
   LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-07 10:44:09
+  LastEditTime: 2025-06-04 14:47:55
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -64,17 +64,39 @@
 			return acc.filter((id) => folderIDs.includes(id));
 		}, allFolderIDs[0] || []);
 	})();
+
+	function autoHeight(node: HTMLTextAreaElement) {
+		function adjust() {
+			node.style.height = '0px'; // 第一步：压缩到最小高度
+			node.style.height = 'auto';
+			node.style.height = node.scrollHeight + 'px';
+			const newHeight = node.scrollHeight + 'px';
+			// 应用最终高度（添加平滑过渡）
+			requestAnimationFrame(() => {
+				node.style.height = newHeight;
+			});
+		}
+
+		adjust(); // 初始化时调整
+		node.addEventListener('input', adjust); // 输入时调整
+
+		return {
+			destroy() {
+				node.removeEventListener('input', adjust);
+			}
+		};
+	}
 </script>
 
 <div class="rightbar">
 	{#if selectItemCount >= 1}
 		<img src={firstSelectedItem.rawUrl} alt="Thumbnail" />
 		{#if selectItemCount > 1}
-			<div>{m.selected_count({ count: selectItemCount })}</div>
+			<div style="text-align: center;">{m.selected_count({ count: selectItemCount })}</div>
 		{/if}
 		{#if selectItemCount === 1}
-			<input
-				type="text"
+			<textarea
+				use:autoHeight
 				bind:value={firstSelectedItem.name}
 				on:blur={() => {
 					updateItem({
@@ -88,9 +110,9 @@
 					}
 				}}
 				placeholder="文件名"
-			/>
-			<input
-				type="text"
+			></textarea>
+			<textarea
+				use:autoHeight
 				bind:value={firstSelectedItem.annotation}
 				on:blur={() => {
 					updateItem({
@@ -104,9 +126,9 @@
 					}
 				}}
 				placeholder="注释"
-			/>
-			<input
-				type="text"
+			></textarea>
+			<textarea
+				use:autoHeight
 				bind:value={firstSelectedItem.url}
 				on:blur={() => {
 					updateItem({
@@ -120,7 +142,7 @@
 					}
 				}}
 				placeholder="Url"
-			/>
+			></textarea>
 		{/if}
 		<div class="tags">
 			<strong>Tags:</strong>
@@ -207,16 +229,18 @@
 	.basic-info .info-grid strong {
 		font-weight: bold;
 	}
-	input {
+	textarea {
+		resize: none;
+		overflow-y: hidden;
+		min-height: 1lh;
+		line-height: 1.5;
 		text-align: left;
 		margin: 2px 0.25vw;
 		border: 1px solid #ccc;
 		border-radius: 0.5vw;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		transition: height 0.2s ease;
 	}
-	input:not(:focus) {
+	textarea:not(:focus) {
 		background-color: #f9f9f9;
 		cursor: default;
 	}
