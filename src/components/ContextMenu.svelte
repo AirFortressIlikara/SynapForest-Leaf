@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-05 21:21:15
+  LastEditTime: 2025-06-05 22:05:37
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -189,6 +189,13 @@
 						onClose: closeModal, // 传递关闭回调
 						maxSelectCount: null
 					});
+				}
+			},
+			{
+				label: '复制文件链接',
+				action: async () => {
+					const fileUrl = $items[Object.keys($selectedItemIDs)[0]].rawUrl;
+					await navigator.clipboard.writeText(fileUrl);
 				}
 			}
 		]
