@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
-  LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-04 14:47:55
+  LastEditors: Ilikara 3435193369@qq.com
+  LastEditTime: 2025-06-05 20:49:42
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -17,7 +17,7 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { folders, items, selectedItemIDs } from './stores';
+	import { tags, folders, items, selectedItemIDs, selectedFolderIDs } from './stores';
 	import * as m from '$lib/paraglide/messages.js';
 	import { updateItem } from './api';
 
@@ -147,8 +147,15 @@
 		<div class="tags">
 			<strong>Tags:</strong>
 			<ul>
-				{#each commonTagIDs as tag}
-					<li class="tag">{tag}</li>
+				{#each commonTagIDs as tagID}
+					<button
+						class="tag"
+						on:click={() => {
+							console.log(tagID, "clicked");
+						}}
+					>
+						{$tags[tagID].name}
+					</button>
 				{/each}
 			</ul>
 		</div>
@@ -156,8 +163,20 @@
 		<div class="tags">
 			<strong>Folders:</strong>
 			<ul>
-				{#each commonFolderIDs as folderID}
-					<li class="tag">{$folders[folderID].name}</li>
+				{#each commonFolderIDs as folderId}
+					<button
+						class="tag"
+						on:click={() => {
+							console.log(folderId, "clicked");
+							selectedFolderIDs.update(($selectedFolderIDs) => {
+								let newselectedFolderIDs = { ...$selectedFolderIDs };
+								newselectedFolderIDs = { [folderId]: true };
+								return newselectedFolderIDs;
+							});
+						}}
+					>
+						{$folders[folderId].name}
+					</button>
 				{/each}
 			</ul>
 		</div>
