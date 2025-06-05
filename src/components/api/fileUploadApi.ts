@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:01:16
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-03 16:23:37
+ * @LastEditTime: 2025-06-05 21:18:41
  * @FilePath: /SynapForest/src/components/api/fileUploadApi.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from 'svelte/store';
-import { serverAddress, token } from '../stores';
+import { debugSign, serverAddress, token } from '../stores';
 
 /**
  * 上传文件到服务器
@@ -35,14 +35,18 @@ export const uploadFiles = async ({
     try {
         // 上传文件到服务器
         const uploadResult = await uploadFilesToServer({ files });
-        console.log('Files uploaded:', uploadResult);
+        if (get(debugSign)) {
+            console.log('Files uploaded:', uploadResult);
+        }
 
         // 将文件路径添加到数据库
         const addPathsResult = await addFilesFromPaths({
             fileNames: files.map((file) => file.name),
             folderIds,
         });
-        console.log('Paths added to database:', addPathsResult);
+        if (get(debugSign)) {
+            console.log('Paths added to database:', addPathsResult);
+        }
 
         return { uploadResult, addPathsResult };
     } catch (error) {

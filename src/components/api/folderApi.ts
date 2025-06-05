@@ -1,8 +1,8 @@
 /*
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
- * @LastEditors: ilikara 3435193369@qq.com
- * @LastEditTime: 2025-03-05 13:46:15
+ * @LastEditors: Ilikara 3435193369@qq.com
+ * @LastEditTime: 2025-06-05 21:18:09
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from 'svelte/store';
-import { folders, serverAddress, token } from '../stores';
+import { debugSign, folders, serverAddress, token } from '../stores';
 import type { Folder } from '../type';
 
 /**
@@ -189,7 +189,9 @@ export const fetchFolders = async ({
             isExpand: folder.isExpand,
         }));
 
-        console.log('Fetched folders:', folders);
+        if (get(debugSign)) {
+            console.log('Fetched folders:', folders);
+        }
 
         return folders;
     } catch (error) {

@@ -1,8 +1,8 @@
 /*
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:01:07
- * @LastEditors: ilikara 3435193369@qq.com
- * @LastEditTime: 2025-03-07 10:22:45
+ * @LastEditors: Ilikara 3435193369@qq.com
+ * @LastEditTime: 2025-06-05 21:17:58
  * @FilePath: /SynapForest/src/components/api/itemApi.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from 'svelte/store';
-import { items, serverAddress, token } from '../stores';
+import { debugSign, items, serverAddress, token } from '../stores';
 import type { Item } from '../type';
 
 /**
@@ -173,7 +173,9 @@ export const fetchItems = async ({
             return formattedItem;
         }) || [];
 
-        console.log('Fetched items:', items);
+        if (get(debugSign)) {
+            console.log('Fetched items:', items);
+        }
 
         return items;
     } catch (error) {

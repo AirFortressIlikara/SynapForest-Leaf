@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-24 15:27:20
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-05 20:49:42
+  LastEditTime: 2025-06-05 21:14:04
   FilePath: /SynapForest/src/components/RightBar.svelte
   Description: 
   
@@ -17,14 +17,16 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { tags, folders, items, selectedItemIDs, selectedFolderIDs } from './stores';
+	import { tags, folders, items, selectedItemIDs, selectedFolderIDs, debugSign } from './stores';
 	import * as m from '$lib/paraglide/messages.js';
 	import { updateItem } from './api';
 
 	$: selectItemCount = Object.keys($selectedItemIDs).length;
 	$: firstSelectedItem = $items[Object.keys($selectedItemIDs)[0]];
 
-	console.log('right bar content:', firstSelectedItem);
+	if ($debugSign) {
+		console.log('right bar content:', firstSelectedItem);
+	}
 
 	$: totalSize =
 		selectItemCount == 0
@@ -151,7 +153,9 @@
 					<button
 						class="tag"
 						on:click={() => {
-							console.log(tagID, "clicked");
+							if ($debugSign) {
+								console.log(tagID, 'clicked');
+							}
 						}}
 					>
 						{$tags[tagID].name}
@@ -167,7 +171,9 @@
 					<button
 						class="tag"
 						on:click={() => {
-							console.log(folderId, "clicked");
+							if ($debugSign) {
+								console.log(folderId, 'clicked');
+							}
 							selectedFolderIDs.update(($selectedFolderIDs) => {
 								let newselectedFolderIDs = { ...$selectedFolderIDs };
 								newselectedFolderIDs = { [folderId]: true };

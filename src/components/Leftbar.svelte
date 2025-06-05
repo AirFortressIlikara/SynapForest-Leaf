@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-05 19:50:49
+  LastEditTime: 2025-06-05 21:12:47
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -22,6 +22,7 @@
 	import FolderTree from './FolderTree.svelte';
 	import {
 		currentModal,
+		debugSign,
 		folders,
 		modalProps,
 		quickAccessActive,
@@ -52,7 +53,9 @@
 						{} as Record<string, boolean>
 					)
 				);
-				console.log('Selected folders:', Object.keys($selectedFolderIDs));
+				if ($debugSign) {
+					console.log('Selected folders:', Object.keys($selectedFolderIDs));
+				}
 			} else if (event.key === 'Delete') {
 				event.preventDefault();
 				showDeleteConfirmationModal();
@@ -80,7 +83,9 @@
 		}
 	});
 
-	$: console.log('Folders updated:', $folders);
+	$: if ($debugSign) {
+		console.log('Folders updated:', $folders);
+	}
 
 	if (browser) {
 		onMount(() => {
@@ -123,7 +128,7 @@
 					// WIP
 				}}
 			>
-				Recent
+				Recent(WIP)
 			</button>
 			<button
 				class="quick-access-button {$quickAccessActive === 'starred' ? 'active' : ''}"
@@ -132,7 +137,7 @@
 					// WIP
 				}}
 			>
-				Starred
+				Starred(WIP)
 			</button>
 		</div>
 
@@ -159,12 +164,14 @@
 								createFolder({
 									folderName: newName
 								});
-								console.log('New Folder Name:', newName);
+								if ($debugSign) {
+									console.log('New Folder Name:', newName);
+								}
 								closeModal();
 								setTimeout(() => updateFolderTree(), 10);
 							},
 							onClose: closeModal,
-							editedName: ""
+							editedName: ''
 						});
 					}}
 					class="add-button"

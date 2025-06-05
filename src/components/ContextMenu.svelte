@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-05 19:52:15
+  LastEditTime: 2025-06-05 21:21:15
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -30,7 +30,7 @@
 		items,
 		currentModal,
 		modalProps,
-		itemEditing
+		debugSign
 	} from './stores';
 	import {
 		closeModal,
@@ -66,13 +66,14 @@
 								folderId: Object.keys($selectedFolderIDs)[0],
 								newName
 							});
-							console.log('newName:', newName);
+							if ($debugSign) {
+								console.log('newName:', newName);
+							}
 							closeModal();
 						},
 						onClose: closeModal,
 						editedName: $folders[Object.keys($selectedFolderIDs)[0]].name
 					});
-					console.log('重命名', $itemEditing);
 				}
 			},
 			{
@@ -113,12 +114,14 @@
 								folderName: newName,
 								parent: Object.keys($selectedFolderIDs)[0]
 							});
-							console.log('New Folder Name:', newName);
+							if ($debugSign) {
+								console.log('New Folder Name:', newName);
+							}
 							closeModal();
 							setTimeout(() => updateFolderTree(), 10);
 						},
 						onClose: closeModal,
-						editedName: ""
+						editedName: ''
 					});
 				}
 			},
@@ -132,12 +135,14 @@
 								folderName: newName,
 								parent: $folders[Object.keys($selectedFolderIDs)[0]].parent
 							});
-							console.log('New Folder Name:', newName);
+							if ($debugSign) {
+								console.log('New Folder Name:', newName);
+							}
 							closeModal();
 							setTimeout(() => updateFolderTree(), 10);
 						},
 						onClose: closeModal,
-						editedName: ""
+						editedName: ''
 					});
 				}
 			}
@@ -159,13 +164,14 @@
 								itemId: Object.keys($selectedItemIDs)[0],
 								name: newName
 							});
-							console.log('newName:', newName);
+							if ($debugSign) {
+								console.log('newName:', newName);
+							}
 							closeModal();
 						},
 						onClose: closeModal,
 						editedName: $items[Object.keys($selectedItemIDs)[0]].name
 					});
-					console.log('重命名', $itemEditing);
 				}
 			},
 			{
@@ -216,8 +222,10 @@
 			{item.label}
 		</div>
 	{/each}
-	<div>坐标: X:{$menuX} Y:{$menuY}</div>
-	<div>类型: {$menuType}</div>
+	{#if $debugSign}
+		<div>坐标: X:{$menuX} Y:{$menuY}</div>
+		<div>类型: {$menuType}</div>
+	{/if}
 </div>
 
 <style>

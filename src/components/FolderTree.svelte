@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 16:39:14
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-04 23:19:56
+  LastEditTime: 2025-06-05 21:11:18
   FilePath: /SynapForest/src/components/FolderTree.svelte
   Description: 
   
@@ -18,6 +18,7 @@
 -->
 <script lang="ts">
 	import {
+		debugSign,
 		folders,
 		itemTrigger,
 		menuType,
@@ -38,7 +39,9 @@
 	$: folder = $folders[folderId];
 	$: subFolderIDs = folder?.subFolders ?? [];
 
-	console.log('Rendering folder id: ', folderId);
+	if ($debugSign) {
+		console.log('Rendering folder id: ', folderId);
+	}
 
 	function handleFolderClick(event: MouseEvent, folderId: string) {
 		selectedFolderIDs.update(($selectedFolderIDs) => {
@@ -59,7 +62,9 @@
 			}
 			return newselectedFolderIDs;
 		});
-		console.log('Selected folders:', Object.keys($selectedFolderIDs));
+		if ($debugSign) {
+			console.log('Selected folders:', Object.keys($selectedFolderIDs));
+		}
 	}
 
 	function handleDragStart(event: DragEvent, item: any) {
@@ -73,16 +78,20 @@
 	async function handleDrop(event: DragEvent) {
 		event.preventDefault();
 
-		console.log('Drag drop detected:', event.dataTransfer?.types);
+		if ($debugSign) {
+			console.log('Drag drop detected:', event.dataTransfer?.types);
+		}
 		if (event.dataTransfer?.types.includes('application/from_item')) {
 			const internalData = event.dataTransfer.getData('application/from_item');
 			const item = JSON.parse(internalData);
-			console.log(
-				'Item to Folder Detected: ',
-				item,
-				'Items to drag: ',
-				Object.keys($selectedItemIDs)
-			);
+			if ($debugSign) {
+				console.log(
+					'Item to Folder Detected: ',
+					item,
+					'Items to drag: ',
+					Object.keys($selectedItemIDs)
+				);
+			}
 			try {
 				addFolderForItems({ itemIds: Object.keys($selectedItemIDs), folderIds: [folderId] });
 			} catch (error) {
@@ -92,20 +101,26 @@
 		} else if (event.dataTransfer?.types.includes('application/from_folder')) {
 			const internalData = event.dataTransfer.getData('application/from_folder');
 			const item = JSON.parse(internalData);
-			console.log(
-				'Folder to Folder Detected:',
-				item,
-				'Folders to drag: ',
-				Object.keys($selectedFolderIDs)
-			);
+			if ($debugSign) {
+				console.log(
+					'Folder to Folder Detected:',
+					item,
+					'Folders to drag: ',
+					Object.keys($selectedFolderIDs)
+				);
+			}
 			updateFoldersParent({ folderIds: Object.keys($selectedFolderIDs), newParent: folderId });
 		} else if (event.dataTransfer?.types.includes('Files')) {
 			const files = event.dataTransfer?.files;
 			if (files && files.length > 0) {
-				console.log('Files to Folder Detected: ', files.length, 'files');
+				if ($debugSign) {
+					console.log('Files to Folder Detected: ', files.length, 'files');
+				}
 				try {
 					const result = await uploadFiles({ files: Array.from(files), folderIds: [folderId] });
-					console.log('Upload result:', result);
+					if ($debugSign) {
+						console.log('Upload result:', result);
+					}
 				} catch (error) {
 					console.error('Error uploading files:', error);
 				} finally {

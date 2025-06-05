@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-01-20 16:28:38
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-06-04 23:18:49
+ * @LastEditTime: 2025-06-05 21:17:13
  * @FilePath: /SynapForest/src/components/stores.ts
  * @Description: 
  * 
@@ -16,7 +16,7 @@
  * MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  * See the Mulan PubL v2 for more details.
  */
-import { derived, writable } from 'svelte/store';
+import { derived, get, writable } from 'svelte/store';
 import type { Folder, Item, Tag } from './type';
 import { fetchItems } from './api/index';
 
@@ -29,6 +29,8 @@ type ModalComponent = ConstructorOfATypedSvelteComponent | null;
 interface ModalProps {
     [key: string]: any;
 }
+
+export const debugSign = writable<boolean>(false);
 
 // 创建 store
 export const currentModal = writable<ModalComponent>(null);
@@ -76,7 +78,9 @@ export const sortedIds = derived(
 
         const ids = sorted.map((item) => item.id);
         set(ids);
-        console.log('Sorted ItemIDs:', ids);
+        if (get(debugSign)) {
+            console.log('Sorted ItemIDs:', ids);
+        }
     },
     [] as string[]
 );
@@ -107,7 +111,9 @@ fetchedItems.subscribe((value) => {
     }, {} as Record<string, Item>);
 
     items.set(itemsRecord);
-    console.log('Update Items:', itemsRecord);
+    if (get(debugSign)) {
+        console.log('Update Items:', itemsRecord);
+    }
 });
 
 export const menuX = writable<number>(0);

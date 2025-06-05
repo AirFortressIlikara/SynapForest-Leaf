@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-22 11:15:47
-  LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-05 14:08:38
+  LastEditors: Ilikara 3435193369@qq.com
+  LastEditTime: 2025-06-05 21:11:34
   FilePath: /SynapForest/src/components/ItemRow.svelte
   Description: 
   
@@ -17,7 +17,16 @@
   See the Mulan PubL v2 for more details.
 -->
 <script lang="ts">
-	import { items, menuType, menuX, menuY, showMenu, selectedItemIDs, itemEditing } from './stores';
+	import {
+		items,
+		menuType,
+		menuX,
+		menuY,
+		showMenu,
+		selectedItemIDs,
+		itemEditing,
+		debugSign
+	} from './stores';
 	import AuthImg from './AuthImg.svelte';
 
 	export let rowItemIDs: string[];
@@ -26,7 +35,9 @@
 
 	let editedName = '';
 
-	console.log('Row item IDs:', rowItemIDs);
+	if ($debugSign) {
+		console.log('Row item IDs:', rowItemIDs);
+	}
 
 	$: rowHeight =
 		(elementWidth - rowItemIDs.length * 20) /
@@ -54,7 +65,9 @@
 			}
 			return newselectedItemIDs;
 		});
-		console.log('Selected items:', Object.keys($selectedItemIDs));
+		if ($debugSign) {
+			console.log('Selected items:', Object.keys($selectedItemIDs));
+		}
 	}
 
 	function handleDragStart(event: DragEvent, item: any) {

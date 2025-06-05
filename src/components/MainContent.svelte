@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-20 13:52:10
-  LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-07 10:51:03
+  LastEditors: Ilikara 3435193369@qq.com
+  LastEditTime: 2025-06-05 21:13:38
   FilePath: /SynapForest/src/components/MainContent.svelte
   Description: 
   
@@ -19,6 +19,7 @@
 <script lang="ts">
 	import ItemRow from './ItemRow.svelte';
 	import {
+		debugSign,
 		isDeleted,
 		itemsPerRow,
 		itemTrigger,
@@ -75,18 +76,23 @@
 	async function handleDrop(event: DragEvent) {
 		event.preventDefault();
 		isDragging = false;
-
-		console.log('Drag drop detected:', event.dataTransfer?.types);
+		if ($debugSign) {
+			console.log('Drag drop detected:', event.dataTransfer?.types);
+		}
 		if (event.dataTransfer?.types.includes('Files')) {
 			const files = event.dataTransfer?.files;
 			if (files && files.length > 0) {
-				console.log('Files to main window Detected: ', files.length, 'files');
+				if ($debugSign) {
+					console.log('Files to main window Detected: ', files.length, 'files');
+				}
 				try {
 					const result = await uploadFiles({
 						files: Array.from(files),
 						folderIds: Object.keys($selectedFolderIDs)
 					});
-					console.log('Upload result:', result);
+					if ($debugSign) {
+						console.log('Upload result:', result);
+					}
 				} catch (error) {
 					console.error('Error uploading files:', error);
 				} finally {
@@ -109,7 +115,9 @@
 						{} as Record<string, boolean>
 					)
 				);
-				console.log('Selected items:', Object.keys($selectedItemIDs));
+				if ($debugSign) {
+					console.log('Selected items:', Object.keys($selectedItemIDs));
+				}
 			} else if (event.key === 'Delete') {
 				event.preventDefault();
 				deleteSelectedItems({ itemIds: Object.keys($selectedItemIDs), hardDelete: $isDeleted });
@@ -139,7 +147,9 @@
 		on:click={(event) => {
 			event.stopPropagation();
 			$selectedItemIDs = {};
-			console.log('Selected Items:', Object.keys($selectedItemIDs));
+			if ($debugSign) {
+				console.log('Selected Items:', Object.keys($selectedItemIDs));
+			}
 		}}
 		on:dragover={handleDragOver}
 		on:dragleave={handleDragLeave}

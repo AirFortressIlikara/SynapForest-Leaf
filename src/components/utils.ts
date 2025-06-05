@@ -2,7 +2,7 @@
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-04 19:13:07
  * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-02-06 21:15:55
+ * @LastEditTime: 2025-06-05 21:16:31
  * @FilePath: /SynapForest/src/components/utils.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from "svelte/store";
-import { currentModal, folderIdToDelete, folders, itemTrigger, modalProps, selectedFolderIDs, selectedItemIDs } from "./stores";
+import { currentModal, debugSign, folderIdToDelete, folders, itemTrigger, modalProps, selectedFolderIDs, selectedItemIDs } from "./stores";
 import { delFolder, delItems, fetchFolders } from "./api";
 import type { Folder } from "./type";
 import FolderDeleteConfirmModal from "./modal/FolderDeleteConfirmModal.svelte";
@@ -40,7 +40,9 @@ export const deleteSelectedItems = async ({
         console.error('Error deleting files:', error);
         throw error;
     } finally {
-        console.log('Deleted items:', itemIds);
+        if (get(debugSign)) {
+            console.log('Deleted items:', itemIds);
+        }
         selectedItemIDs.set({});
         setTimeout(() => itemTrigger.set(!get(itemTrigger)), 10);
     }
@@ -48,7 +50,9 @@ export const deleteSelectedItems = async ({
 
 // 显示删除确认模态框
 export function showDeleteConfirmationModal() {
-    console.log('showDeleteConfirmationModal')
+    if (get(debugSign)) {
+        console.log('showDeleteConfirmationModal')
+    }
     currentModal.set(FolderDeleteConfirmModal);
     modalProps.set({
         onConfirm: (deleteItems: boolean) => {
@@ -88,7 +92,9 @@ export const deleteSelectedFolders = async ({
         console.error('Error deleting folders:', error);
         throw error;
     } finally {
-        console.log('Deleted folders:', folderId);
+        if (get(debugSign)) {
+            console.log('Deleted folders:', folderId);
+        }
         selectedFolderIDs.set({});
         setTimeout(() => updateFolderTree(), 10);
     }
