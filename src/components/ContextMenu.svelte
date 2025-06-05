@@ -1,8 +1,8 @@
 <!--
   Author: Ilikara 3435193369@qq.com
   Date: 2025-02-01 19:38:24
-  LastEditors: ilikara 3435193369@qq.com
-  LastEditTime: 2025-03-07 14:04:49
+  LastEditors: Ilikara 3435193369@qq.com
+  LastEditTime: 2025-06-05 19:52:15
   FilePath: /SynapForest/src/components/ContextMenu.svelte
   Description: 
   
@@ -106,18 +106,39 @@
 			{
 				label: '新建子文件夹',
 				action: () => {
-					console.log('clicked');
-					createFolder({ folderName: 'OvO', parent: Object.keys($selectedFolderIDs)[0] });
-					setTimeout(() => updateFolderTree(), 10);
+					currentModal.set(RenameModal);
+					modalProps.set({
+						onConfirm: (newName: string) => {
+							createFolder({
+								folderName: newName,
+								parent: Object.keys($selectedFolderIDs)[0]
+							});
+							console.log('New Folder Name:', newName);
+							closeModal();
+							setTimeout(() => updateFolderTree(), 10);
+						},
+						onClose: closeModal,
+						editedName: ""
+					});
 				}
 			},
 			{
 				label: '在同级目录新建文件夹',
 				action: () => {
-					console.log('clicked');
-					const parent = $folders[Object.keys($selectedFolderIDs)[0]].parent;
-					createFolder({ folderName: 'OvO', parent });
-					setTimeout(() => updateFolderTree(), 10);
+					currentModal.set(RenameModal);
+					modalProps.set({
+						onConfirm: (newName: string) => {
+							createFolder({
+								folderName: newName,
+								parent: $folders[Object.keys($selectedFolderIDs)[0]].parent
+							});
+							console.log('New Folder Name:', newName);
+							closeModal();
+							setTimeout(() => updateFolderTree(), 10);
+						},
+						onClose: closeModal,
+						editedName: ""
+					});
 				}
 			}
 		],

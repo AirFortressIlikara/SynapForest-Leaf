@@ -2,7 +2,7 @@
   Author: Ilikara 3435193369@qq.com
   Date: 2025-01-21 21:39:59
   LastEditors: Ilikara 3435193369@qq.com
-  LastEditTime: 2025-06-04 23:19:02
+  LastEditTime: 2025-06-05 19:50:49
   FilePath: /SynapForest/src/components/Leftbar.svelte
   Description: 
   
@@ -20,11 +20,19 @@
 	import { ChevronDown, ChevronLeft, Plus } from '@lucide/svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import FolderTree from './FolderTree.svelte';
-	import { folders, quickAccessActive, selectedFolderIDs, selectedItemIDs } from './stores';
+	import {
+		currentModal,
+		folders,
+		modalProps,
+		quickAccessActive,
+		selectedFolderIDs,
+		selectedItemIDs
+	} from './stores';
 	import { browser } from '$app/environment';
 	import { createFolder, fetchFolders } from './api';
 	import type { Folder } from './type';
-	import { showDeleteConfirmationModal, updateFolderTree } from './utils';
+	import { closeModal, showDeleteConfirmationModal, updateFolderTree } from './utils';
+	import RenameModal from './modal/RenameModal.svelte';
 
 	let isLoading = false;
 	let leftBarElement: HTMLElement;
@@ -128,9 +136,7 @@
 			</button>
 		</div>
 
-		<div
-			class="folder-tree-container"
-		>
+		<div class="folder-tree-container">
 			<div class="folder-tree-header">
 				<span>Folders</span>
 				<button
@@ -147,10 +153,19 @@
 				</button>
 				<button
 					on:click={(event) => {
-						event.stopPropagation();
-						console.log('Add folder Clicked');
-						createFolder({ folderName: 'OvO' });
-						setTimeout(() => updateFolderTree(), 10);
+						currentModal.set(RenameModal);
+						modalProps.set({
+							onConfirm: (newName: string) => {
+								createFolder({
+									folderName: newName
+								});
+								console.log('New Folder Name:', newName);
+								closeModal();
+								setTimeout(() => updateFolderTree(), 10);
+							},
+							onClose: closeModal,
+							editedName: ""
+						});
 					}}
 					class="add-button"
 				>
