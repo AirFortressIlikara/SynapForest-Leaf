@@ -1,8 +1,8 @@
 /*
  * @Author: Ilikara 3435193369@qq.com
  * @Date: 2025-02-03 13:00:47
- * @LastEditors: Ilikara 3435193369@qq.com
- * @LastEditTime: 2025-06-05 21:18:09
+ * @LastEditors: ilikara 3435193369@qq.com
+ * @LastEditTime: 2025-06-06 08:42:45
  * @FilePath: /SynapForest/src/components/api/folderApi.ts
  * @Description: 
  * 
@@ -17,7 +17,7 @@
  * See the Mulan PubL v2 for more details.
  */
 import { get } from 'svelte/store';
-import { debugSign, folders, serverAddress, token } from '../stores';
+import { debugSign, folders, items, serverAddress, token } from '../stores';
 import type { Folder } from '../type';
 
 /**
@@ -64,6 +64,16 @@ export const addFolderForItems = async ({
     } catch (error) {
         console.error('Error adding folder associations:', error);
         throw error;
+    } finally {
+        items.update(currentItems => {
+            const newItems = { ...currentItems }; // 浅拷贝对象
+            for (const itemId of itemIds)
+                newItems[itemId] = {
+                    ...newItems[itemId], // 浅拷贝 item
+                    folderIds: [...newItems[itemId].folderIds, ...folderIds], // 新建数组
+                };
+            return newItems;
+        });
     }
 };
 
